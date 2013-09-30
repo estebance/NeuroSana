@@ -4,9 +4,12 @@ import com.utilities.neurosana.ManageFiles;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class NeuroActivity extends Activity 
 {
@@ -32,29 +35,49 @@ public class NeuroActivity extends Activity
 	
 	public void search_file (View v)
 	{	
-		
+	int duration_toast = Toast.LENGTH_LONG;
+	CharSequence text_show = "";
 	boolean sdcard_verify = verify_data.verify_sdcard();
 	boolean directory_verify = verify_data.verify_directory();
+	Resources res = getResources();
 	
-	if (sdcard_verify == true)
+	/*
+	 * Verificamos el contexto para mostrar el toast  
+	 */
+	
+	 Context context = getApplicationContext();
+	 
+
+	 System.out.println(sdcard_verify);
+	 System.out.println(directory_verify);
+	 
+	
+	
+	/*
+	 * condicionales para realizar el intent a donde son listados los archivos del directorio 
+	 */
+	 
+	if (sdcard_verify)
 	{
-		if(directory_verify == true)
+		if(directory_verify)
 		{
 			//Intent send_to_list_files = new Intent(this,ListFilesActivity.class);
-		    //startActivity(send_to_list_files);
-			
-			System.out.println("Has capturado un  archivo");	
+		    //startActivity(send_to_list_files);	
 					
 		}
 		else
 		{
-		 System.out.println("Aun no has capturado ningun archivo");	
+		 text_show = res.getString(R.string.folder_availability);
+		 Toast toast = Toast.makeText(context, text_show, duration_toast);
+		 toast.show();
 		}
 	}	
 	
 	else
 	{
-	System.out.println("no tienes tarjeta sd para almacenar el archivo");	
+	text_show = res.getString(R.string.sdcard_availability);
+	Toast toast = Toast.makeText(context, text_show, duration_toast);
+	toast.show();
 	} 
     
     }

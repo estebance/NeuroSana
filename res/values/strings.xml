@@ -9,5 +9,6 @@
     <string name="no_file_upload">No se ha cargado un archivo</string>
     <string name="title_activity_list_files">ListFilesActivity</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="sdcard_availability">Sdcard no disponible</string>
+    <string name="folder_availability">No has capturado ningun archivo</string>
 </resources>
