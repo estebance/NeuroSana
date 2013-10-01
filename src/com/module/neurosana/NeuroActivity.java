@@ -61,8 +61,11 @@ public class NeuroActivity extends Activity
 	{
 		if(directory_verify)
 		{
-			//Intent send_to_list_files = new Intent(this,ListFilesActivity.class);
-		    //startActivity(send_to_list_files);	
+			 Intent send_to_list_files = new Intent(this,ListFilesActivity.class);
+		     startActivity(send_to_list_files);	
+			 text_show = "esta funcionando";
+			 Toast toast = Toast.makeText(context, text_show, duration_toast);
+			 toast.show();
 					
 		}
 		else
