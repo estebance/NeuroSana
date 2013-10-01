@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +21,7 @@ public class ListFilesActivity extends Activity
 
    ListView file_list;	
    ArrayAdapter<String> adapter_list_file;
+   File directory;
 
 	
 	
@@ -32,7 +35,7 @@ public class ListFilesActivity extends Activity
 		
 		/* obtener el directorio y crear la ruta de archivos*/ 
 		
-		File directory = new File(Environment.getExternalStorageDirectory() + "/EEGsaved/");
+		directory = new File(Environment.getExternalStorageDirectory() + "/EEGsaved/");
 		File[] files = directory.listFiles();
 		
 	    /* capturar la list view para cargar los archivos */
@@ -48,21 +51,31 @@ public class ListFilesActivity extends Activity
 			
 		file_list=(ListView)findViewById(R.id.listView1list_files_activity);
 		file_list.setAdapter(adapter_list_file);
+		
 		/*listener que capturara cuando se pulse sobre un archivo*/
 		file_list.setOnItemClickListener(new OnItemClickListener()
 		  {
             @Override
 			public void onItemClick(AdapterView<?> parent, View view , int position , long id) 
             {
-             //   Intent data = new Intent();
+             //   
                 
-
              String fileselected  = adapter_list_file.getItem(position).toString();
-        	 System.out.println("seleccionado" + fileselected);
-            	
-             //data.putExtra("filename", fileselected);
-             //   setResult(RESULT_OK, data);
-             //   finish();
+             
+             /* capturamos URI  del archivo */ 
+             
+        	  File file_selected = new File(directory, fileselected);
+        	  Uri uri_file = Uri.fromFile(file_selected);
+        	  String fileuri = uri_file.toString(); 
+              System.out.println("seleccionado" + uri_file);
+            
+                 	 
+        	 /* repondemos con el intent */ 
+        	 
+        	    Intent data = new Intent();
+        	    data.putExtra("fileuri", fileuri);
+                setResult(RESULT_OK, data);
+                finish();
 				
 			}
            });
