@@ -26,6 +26,10 @@
             android:name="com.module.neurosana.ListFilesActivity"
             android:label="@string/title_activity_list_files" >
         </activity>
+        <activity
+            android:name="com.module.neurosana.BtListActivity"
+            android:label="@string/title_activity_bt_list" >
+        </activity>
     </application>
 
 </manifest>

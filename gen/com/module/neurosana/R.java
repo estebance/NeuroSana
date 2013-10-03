@@ -24,20 +24,23 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080005;
-        public static final int button1neuro_activity=0x7f080002;
-        public static final int button2neuro_activity=0x7f080001;
-        public static final int listView1list_files_activity=0x7f080000;
-        public static final int textView1neuro_activity=0x7f080003;
-        public static final int textView2neuro_activity=0x7f080004;
+        public static final int action_settings=0x7f080006;
+        public static final int button1neuro_activity=0x7f080003;
+        public static final int button2neuro_activity=0x7f080002;
+        public static final int listView1bt_list_activity=0x7f080000;
+        public static final int listView1list_files_activity=0x7f080001;
+        public static final int textView1neuro_activity=0x7f080004;
+        public static final int textView2neuro_activity=0x7f080005;
     }
     public static final class layout {
-        public static final int activity_list_files=0x7f030000;
-        public static final int activity_neuro=0x7f030001;
+        public static final int activity_bt_list=0x7f030000;
+        public static final int activity_list_files=0x7f030001;
+        public static final int activity_neuro=0x7f030002;
     }
     public static final class menu {
-        public static final int list_files=0x7f070000;
-        public static final int neuro=0x7f070001;
+        public static final int bt_list=0x7f070000;
+        public static final int list_files=0x7f070001;
+        public static final int neuro=0x7f070002;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
@@ -49,6 +52,7 @@ public final class R {
         public static final int no_file_upload=0x7f050005;
         public static final int sdcard_availability=0x7f050008;
         public static final int search_file=0x7f050002;
+        public static final int title_activity_bt_list=0x7f05000a;
         public static final int title_activity_list_files=0x7f050006;
     }
     public static final class style {
