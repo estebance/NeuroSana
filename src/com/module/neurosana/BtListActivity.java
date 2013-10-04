@@ -143,6 +143,27 @@ connector.cancelDiscovery();
 }   
 
 
-/////////////////////////// falta destruir el discovery y detener el broadcast 
+/////////////////////////// detener el broadcast  y reanudarlo ///////////////////////////////////// 
+@Override
+protected void onDestroy()
+{
+super.onDestroy();
+unregisterReceiver(Receiver_Devices);	
+}
+
+@Override
+protected void onPause()
+{
+super.onPause();
+unregisterReceiver(Receiver_Devices);
+}
+
+@Override
+protected void onResume()
+{
+super.onResume();
+registerReceiver(Receiver_Devices, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+}
+
 
 }

@@ -12,5 +12,6 @@
     <string name="sdcard_availability">Sdcard no disponible</string>
     <string name="folder_availability">No has capturado ningun archivo</string>
     <string name="title_activity_bt_list">BtListActivity</string>
+    <string name="title_activity_control_bt">ControlBtActivity</string>
 
 </resources>

@@ -34,13 +34,15 @@ public final class R {
     }
     public static final class layout {
         public static final int activity_bt_list=0x7f030000;
-        public static final int activity_list_files=0x7f030001;
-        public static final int activity_neuro=0x7f030002;
+        public static final int activity_control_bt=0x7f030001;
+        public static final int activity_list_files=0x7f030002;
+        public static final int activity_neuro=0x7f030003;
     }
     public static final class menu {
         public static final int bt_list=0x7f070000;
-        public static final int list_files=0x7f070001;
-        public static final int neuro=0x7f070002;
+        public static final int control_bt=0x7f070001;
+        public static final int list_files=0x7f070002;
+        public static final int neuro=0x7f070003;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
@@ -53,6 +55,7 @@ public final class R {
         public static final int sdcard_availability=0x7f050008;
         public static final int search_file=0x7f050002;
         public static final int title_activity_bt_list=0x7f05000a;
+        public static final int title_activity_control_bt=0x7f05000b;
         public static final int title_activity_list_files=0x7f050006;
     }
     public static final class style {

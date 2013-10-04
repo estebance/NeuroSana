@@ -30,6 +30,10 @@
             android:name="com.module.neurosana.BtListActivity"
             android:label="@string/title_activity_bt_list" >
         </activity>
+        <activity
+            android:name="com.module.neurosana.ControlBtActivity"
+            android:label="@string/title_activity_control_bt" >
+        </activity>
     </application>
 
 </manifest>
