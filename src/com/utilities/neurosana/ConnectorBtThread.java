@@ -95,6 +95,7 @@ public class ConnectorBtThread extends Thread
         {        
      	
      	 System.out.println("error es necesario cerrar:" +connectException);     	
+     	 
      	 try 
           {
              Socket_information.close();
@@ -122,7 +123,7 @@ public class ConnectorBtThread extends Thread
       }
       }
 
-      public void cancel() 
+    public void cancel() 
       {
       try 
        {

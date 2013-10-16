@@ -137,9 +137,9 @@ private void threadscan()
 public void callserver (String devicedir)
 {
 connector.cancelDiscovery();
-//Intent cliente = new Intent(this , ClientActivity.class);
-//cliente.putExtra("btdir", devicedir);
-//startActivity(cliente);
+Intent control_bt_server = new Intent(this , ControlBtActivity.class);
+control_bt_server.putExtra("btdir", devicedir);
+startActivity(control_bt_server);
 }   
 
 

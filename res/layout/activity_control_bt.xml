@@ -8,4 +8,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ControlBtActivity" >
 
+    <Button
+        android:id="@+id/button1bt_control_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        android:onClick="command_capture"
+        android:text="Button" />
+
 </RelativeLayout>
