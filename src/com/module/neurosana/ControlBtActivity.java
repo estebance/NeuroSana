@@ -3,6 +3,8 @@ package com.module.neurosana;
 import com.utilities.neurosana.ConnectorBtThread;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -15,6 +17,10 @@ public class ControlBtActivity extends Activity
 String Bt_Dir;
 private BluetoothAdapter BluetoothAdapterConn = null;
 ConnectorBtThread connection;
+
+public static final int COMANDO_ENTRANTE = 1;
+public static final int ERROR = 2; 
+
 	
 	
 	@Override
@@ -36,7 +42,7 @@ ConnectorBtThread connection;
 		//System.out.println("pillado " +device_to_conn.getName());
 		//System.out.println("dirr"+ device_to_conn.getAddress());
 		
-		connection = new ConnectorBtThread(device_to_conn);
+		connection = new ConnectorBtThread(device_to_conn , Handler_responses_server );
 	}
 
 	@Override
@@ -52,5 +58,30 @@ ConnectorBtThread connection;
 	  connection.write("2");	
 	}
 	
+    private final Handler Handler_responses_server = new Handler() 
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) 
+            {
+            case COMANDO_ENTRANTE:
+            	
+                byte[] datafrombuf = (byte[]) msg.obj;
+                // construct a string from the buffer
+                String command = new String(datafrombuf);
+                
+                System.out.println("comando desde el servidor" +command);
 
+
+                break;
+            case ERROR:
+                
+                break;
+           
+            }
+        }
+    };
+	
+	
+	
 }

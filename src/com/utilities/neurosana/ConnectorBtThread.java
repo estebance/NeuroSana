@@ -7,8 +7,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import com.module.neurosana.ControlBtActivity;
+
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
 
 public class ConnectorBtThread extends Thread
 {
@@ -17,14 +20,16 @@ public class ConnectorBtThread extends Thread
 	private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FD");
 	private final InputStream incoming_data;
 	private  OutputStream outgoing_data;
+	public Handler handler_response;
 	
 
     byte[] bit;
     
-    public ConnectorBtThread (BluetoothDevice device) 
+    public ConnectorBtThread (BluetoothDevice device , Handler handler) 
     {    	
         BluetoothSocket socketemporal = null;
-        Device_bt = device;    
+        Device_bt = device; 
+        handler_response = handler; 
         InputStream temporal_input = null;
         OutputStream temporal_output = null;
         
@@ -78,6 +83,10 @@ public class ConnectorBtThread extends Thread
       	 bytes = incoming_data.read(buffer);
       	 System.out.println("bytes:"+bytes+"buffer:"+buffer);
       	 System.out.println(buffer.toString());
+
+         // capturamos lo que llega en la actividad falta mejorar logica 
+         handler_response.obtainMessage(ControlBtActivity.COMANDO_ENTRANTE, bytes, -1, buffer).sendToTarget();
+      
       	   
           //FileOutputStream  fileOuputStream = new FileOutputStream("escribir una ruta");
           //fileOuputStream.write(filebyte);
@@ -135,4 +144,19 @@ public class ConnectorBtThread extends Thread
       }
     }
 
+
+
+
+
 }
+
+
+/*
+    private static final int COMANDO_SALIR = 1;
+	private static final int COMANDO_ENVIAR = 2;
+	private static final int COMANDO_CANCELAR=3;
+	private static final int COMANDO_INICIAR=4; ;
+	private static final int COMANDO_TERMINADO=5;
+	private static final int COMANDO_CANCELADO=5;
+*/
+ 
