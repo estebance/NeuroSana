@@ -39,10 +39,11 @@ public static final int ERROR = 2;
 		BluetoothAdapterConn = BluetoothAdapter.getDefaultAdapter();
 		BluetoothDevice device_to_conn = BluetoothAdapterConn.getRemoteDevice(Bt_Dir);
 		
-		//System.out.println("pillado " +device_to_conn.getName());
-		//System.out.println("dirr"+ device_to_conn.getAddress());
+		System.out.println("pillado " +device_to_conn.getName());
+		System.out.println("dirr"+ device_to_conn.getAddress());
 		
 		connection = new ConnectorBtThread(device_to_conn , Handler_responses_server );
+		connection.start();
 	}
 
 	@Override
@@ -55,7 +56,8 @@ public static final int ERROR = 2;
 	
 	public void command_capture(View v)
 	{
-	  connection.write("2");	
+	  String a = "4";	
+	  connection.write(a.getBytes());	
 	}
 	
     private final Handler Handler_responses_server = new Handler() 

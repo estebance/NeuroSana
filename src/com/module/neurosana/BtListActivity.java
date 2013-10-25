@@ -36,6 +36,8 @@ public class BtListActivity extends Activity
 		/*declaramos un conector con el fin de saber si tenemos disponible bluetooth  y habilitarlo*/		
 		connector =  BluetoothAdapter.getDefaultAdapter();
 		turnonbluetooth();	
+	    bt_list_devices.clear(); 
+	    threadscan();
 		/*encontramos un dispositivo bluetooth?*/
 		registerReceiver(Receiver_Devices, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 		/*insertamos dispositivos en el adapter y por consiguiente a la vista*/

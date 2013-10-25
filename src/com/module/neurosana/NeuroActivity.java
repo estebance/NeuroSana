@@ -97,4 +97,12 @@ public class NeuroActivity extends Activity
 	}     
     }
 	
+	public void capture_data(View v)
+	{
+		
+		Intent listdevices = new Intent(this, BtListActivity.class);
+    	startActivity(listdevices);	
+		
+	}
+	
 }
