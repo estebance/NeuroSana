@@ -13,5 +13,6 @@
     <string name="folder_availability">No has capturado ningun archivo</string>
     <string name="title_activity_bt_list">BtListActivity</string>
     <string name="title_activity_control_bt">ControlBtActivity</string>
+    <string name="not_connected">No Tienes Conexion</string>
 
 </resources>

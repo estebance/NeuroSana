@@ -53,6 +53,7 @@ public final class R {
         public static final int hello_world=0x7f050007;
         public static final int name_file=0x7f050004;
         public static final int no_file_upload=0x7f050005;
+        public static final int not_connected=0x7f05000c;
         public static final int sdcard_availability=0x7f050008;
         public static final int search_file=0x7f050002;
         public static final int title_activity_bt_list=0x7f05000a;

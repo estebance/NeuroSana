@@ -39,7 +39,7 @@ public class BtListActivity extends Activity
 	    bt_list_devices.clear(); 
 	    threadscan();
 		/*encontramos un dispositivo bluetooth?*/
-		registerReceiver(Receiver_Devices, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+		this.registerReceiver(Receiver_Devices, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 		/*insertamos dispositivos en el adapter y por consiguiente a la vista*/
 		devices_list.setAdapter(bt_list_devices);
 		/*si damos click a un dispositivo?*/
@@ -92,7 +92,7 @@ public class BtListActivity extends Activity
     }	
 
 
-    BroadcastReceiver Receiver_Devices = new BroadcastReceiver() 
+    private final BroadcastReceiver Receiver_Devices = new BroadcastReceiver() 
     {
     @Override
     public void onReceive(Context context, Intent intent) 
@@ -115,6 +115,7 @@ private void threadscan()
 	  
 	Thread t = new Thread()
 	{
+		@Override
 		public void run()
 		{
 			connector.startDiscovery(); 
@@ -150,21 +151,20 @@ startActivity(control_bt_server);
 protected void onDestroy()
 {
 super.onDestroy();
-unregisterReceiver(Receiver_Devices);	
+this.unregisterReceiver(Receiver_Devices);	
 }
 
 @Override
 protected void onPause()
 {
 super.onPause();
-unregisterReceiver(Receiver_Devices);
+this.unregisterReceiver(Receiver_Devices);
 }
 
 @Override
 protected void onResume()
 {
 super.onResume();
-registerReceiver(Receiver_Devices, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 }
 
 

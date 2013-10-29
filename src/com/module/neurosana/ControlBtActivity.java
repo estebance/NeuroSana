@@ -10,16 +10,19 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class ControlBtActivity extends Activity 
 {
 
 String Bt_Dir;
 private BluetoothAdapter BluetoothAdapterConn = null;
-ConnectorBtThread connection;
+ConnectorBtThread connection = null ;
 
 public static final int COMANDO_ENTRANTE = 1;
 public static final int ERROR = 2; 
+public static final String COMAND = "comando";
+public static final String STATE = "estado";
 
 	
 	
@@ -42,8 +45,9 @@ public static final int ERROR = 2;
 		System.out.println("pillado " +device_to_conn.getName());
 		System.out.println("dirr"+ device_to_conn.getAddress());
 		
-		connection = new ConnectorBtThread(device_to_conn , Handler_responses_server );
-		connection.start();
+		connection = new ConnectorBtThread( Handler_responses_server );
+		connection.connect_client(device_to_conn);
+		
 	}
 
 	@Override
@@ -55,9 +59,16 @@ public static final int ERROR = 2;
 	
 	
 	public void command_capture(View v)
-	{
-	  String a = "4";	
-	  connection.write(a.getBytes());	
+	{	
+        if (connection.get_My_State() != ConnectorBtThread.STATE_CONNECTED) 
+        {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else
+        {
+	       connection.setinfo(2);
+        }
 	}
 	
     private final Handler Handler_responses_server = new Handler() 
@@ -68,17 +79,13 @@ public static final int ERROR = 2;
             {
             case COMANDO_ENTRANTE:
             	
-                byte[] datafrombuf = (byte[]) msg.obj;
-                // construct a string from the buffer
-                String command = new String(datafrombuf);
-                
-                System.out.println("comando desde el servidor" +command);
-
-
-                break;
+               String llego_orden = msg.getData().getString(COMAND);
+               System.out.println("capturamos la respuesta en la vista" +llego_orden);
+            break;
             case ERROR:
-                
-                break;
+               String llego_estado = msg.getData().getString(STATE);
+               System.out.println("capturamos la respuesta en la vista" +llego_estado); 
+            break;
            
             }
         }
