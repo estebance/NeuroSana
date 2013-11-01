@@ -105,7 +105,7 @@ public class BtListActivity extends Activity
     }
     else if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action))
     {
-    System.out.println("boton animado de que termino scan");	
+    System.out.println("boton animado de que termino scan u otra senal");	
     }
     }
     };	
