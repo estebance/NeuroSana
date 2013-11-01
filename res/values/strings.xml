@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NeuroSana</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="search_file">Buscar Archivo</string>
+    <string name="capture_data">Capturar Datos</string>
+    <string name="name_file">Nombre del Archivo</string>
+    <string name="no_file_upload">No se ha cargado un archivo</string>
+    <string name="title_activity_list_files">ListFilesActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="sdcard_availability">Sdcard no disponible</string>
+    <string name="folder_availability">No has capturado ningun archivo</string>
+    <string name="title_activity_bt_list">BtListActivity</string>
+    <string name="title_activity_control_bt">ControlBtActivity</string>
+    <string name="not_connected">No Tienes Conexion</string>
+    <string name="bluetooth_turn_off">El BLUETOOTH no fue encendido</string>
+    <string name="bluetooth_availability">No cuenta con BLUETOOTH</string>
+     <string name="scan_turn_off">No estas escaneando dispositivos</string>
+</resources>
