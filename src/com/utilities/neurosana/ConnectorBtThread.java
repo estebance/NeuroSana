@@ -1,5 +1,9 @@
 package com.utilities.neurosana;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,6 +14,7 @@ import com.module.neurosana.ControlBtActivity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
@@ -17,7 +22,7 @@ import android.os.Message;
 public class ConnectorBtThread 
 {
 
-/* en esta clase indicamos el estado de la conexion*/	
+/* en esta clase indicamos el estado de la conexion y se realizan los procesos*/	
 private final Handler my_Handler_to_ui;
 private Connect_BtThread my_Connect;
 private Management_Connection my_Connected;
@@ -25,14 +30,11 @@ private int myState;
 
 
 /*Estados de la conexion*/
-public static final int NO_STATE = 0;       // we're doing nothing
-public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-public static final int ERROR_CONNECTION = 4;
-
-
-
-
+public static final int NO_STATE = 0;
+public static final int STATE_CONNECTING = 1; 
+public static final int STATE_CONNECTED = 2;  
+public static final int ERROR_CONNECTION = 3;
+public static final int ERROR_DATA = 4;
 
 
 public ConnectorBtThread( Handler handler ) 
@@ -44,8 +46,7 @@ public ConnectorBtThread( Handler handler )
 private synchronized void set_My_State(int state) 
 {
      myState = state;
-    // Give the new state to the Handler so the UI Activity can update
-    // mHandler.obtainMessage(BluetoothChat.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+     send_state_to_ui(state);
 }
 
 
@@ -58,11 +59,12 @@ public synchronized void connect_client(BluetoothDevice device)
 {
     if (myState == STATE_CONNECTING) 
     {
-        if (my_Connect != null) {my_Connect.cancel(); my_Connect = null;}
+    if (my_Connect != null) {my_Connect.cancel(); my_Connect = null;}
     }
     if (my_Connected != null) {my_Connected.cancel(); my_Connected = null;}
 
-    // Start the thread to connect with the given device
+    /* vamos a iniciar un proceso de conexion */
+    
     my_Connect = new Connect_BtThread(device);
     my_Connect.start();
     set_My_State(STATE_CONNECTING);
@@ -71,11 +73,6 @@ public synchronized void connect_client(BluetoothDevice device)
 
 public synchronized void connected_with_server (BluetoothSocket socket) 
 {
-
-    if (my_Connect != null) {my_Connect.cancel(); my_Connect = null;}
-    if (my_Connected != null) {my_Connected.cancel(); my_Connected = null;}
-
-
     my_Connected = new Management_Connection(socket);
     my_Connected.start();
     set_My_State(STATE_CONNECTED);
@@ -100,7 +97,7 @@ public synchronized void stop() {
     public void setinfo (int data)
     { 
     	   Management_Connection send;
-          // sincronizando para poder ser empleado  , si es posible quitarlos
+          // sincronizando para poder ser empleado 
           synchronized (this) 
           {
            if (myState != STATE_CONNECTED) return;
@@ -132,8 +129,6 @@ public class Connect_BtThread extends Thread
   private final BluetoothSocket socket_information_connect;	
   private final UUID MY_UUID = UUID.fromString("0000-11010000-1000-8000-00805F9B34FD");
 
-
-	
   public Connect_BtThread (BluetoothDevice device) 
     {  
 	  BluetoothSocket socket_connect = null ;
@@ -149,7 +144,7 @@ public class Connect_BtThread extends Thread
         }
         catch(IOException e)
         {
-        System.out.println("imposible conectar" + e);
+        System.out.println("no es posible crear el socket" + e);
      	send_state_to_ui(ERROR_CONNECTION);
      	set_My_State(ERROR_CONNECTION);
         }
@@ -163,16 +158,12 @@ public class Connect_BtThread extends Thread
     
      @Override
 	public void run()
-     {   
-    	 
-    	System.out.println("iniciamos.....");                            
-        System.out.println("Conectado iniciamos la comunicacion: " + MY_UUID);  
-         
+     {      	                          
         /*iniciado el socket*/
          try 
          {
-         // pueda que funcione es mejor revisar. 
          socket_information_connect.connect();
+         System.out.println("Conectado iniciamos la comunicacion: " + MY_UUID);  
          }  
          catch (Exception e) 
          {
@@ -206,7 +197,6 @@ public class Connect_BtThread extends Thread
         catch (IOException e) 
         {
         System.out.println("problema al cerrar el socket");
-     	send_state_to_ui(ERROR_CONNECTION);
      	set_My_State(ERROR_CONNECTION);
         }
     }
@@ -220,10 +210,10 @@ public class Connect_BtThread extends Thread
 public class Management_Connection extends Thread
 { 	
 
-    private final  BluetoothSocket socket_information;
+	/* variables para gestion de la conexion*/
+    private BluetoothSocket socket_information;
     private InputStream incoming_data;
     private OutputStream outgoing_data;
-	
     
     /*Respuestas y solicitudes al servidor*/
     private static final int COMANDO_SALIR = 1;
@@ -234,14 +224,11 @@ public class Management_Connection extends Thread
     private static final int COMANDO_CANCELADO=5;
 	
     
-    String readMessage = null;
-    
     public Management_Connection(BluetoothSocket socket) 
     {    	
         InputStream temporal_input = null;
         OutputStream temporal_output = null;
-        
-        
+               
         try 
         {
            temporal_input = socket.getInputStream();
@@ -249,8 +236,8 @@ public class Management_Connection extends Thread
         }
         catch(Exception e)
         {
-        System.out.println("imposible conectar" + e);
-     	send_state_to_ui(ERROR_CONNECTION);
+        System.out.println("imposible gestionar los stream" + e);
+        e.printStackTrace();
      	set_My_State(ERROR_CONNECTION);
         }
         
@@ -259,24 +246,21 @@ public class Management_Connection extends Thread
          outgoing_data = temporal_output;
     }
     
-    /*cuando corre el hilo despues del constructor hemos logrado conectarnos y estamos listos para transmitir informacion*/
+    /*cuando corre el hilo despues del constructor estamos listos para transmitir informacion*/
     
      @Override
 	public void run()
      {   
-    	 
-    	System.out.println("iniciamos en este momento ya estamos gestionando la conexion.....");                            
-         
-         /*iniciado el socket gestionamos esa conexion con el servidor por tanto nos remitimos a esa clas*/
-         int orden = 0;
-         
+    	 int orden = 0; 
+    	System.out.println("enviando y recibiendo streams, gestionando la conexion...");                            
+              
          while (true) 
          {
          try 
          {
-         // pueda que funcione es mejor revisar. 
+          /* recibiendo respuestas del servidor */
+        	 
           orden = incoming_data.read();
-          System.out.println(orden);
           if(orden == COMANDO_ENVIAR)
           {
           receivefile();  
@@ -285,11 +269,13 @@ public class Management_Connection extends Thread
           {
           send_to_ui(orden);
           }
+         
          }  
+         
          catch (IOException e) 
          {
-      	 System.out.println("inputstream error en hilo comunicacion connector:"+e); 
-      	 send_state_to_ui(ERROR_CONNECTION);
+      	 System.out.println("error en la comunicacion:"+e); 
+      	 e.printStackTrace();
       	 set_My_State(ERROR_CONNECTION);
          break;
          }
@@ -297,9 +283,10 @@ public class Management_Connection extends Thread
  
     }
     
-    /* Debemos llamarte cuando decidamos enviar una solicitud */
+    /* Debemos  este metodo cuando decidamos enviar una solicitud */
+    
     public void write(int order) 
-     {
+    {
       try  
       {  	  
       System.out.println("datos a enviar "+ order);
@@ -313,7 +300,7 @@ public class Management_Connection extends Thread
  	  
       }
      
-      }
+     }
     
     public void cancel() 
     {
@@ -327,24 +314,44 @@ public class Management_Connection extends Thread
         send_state_to_ui(ERROR_CONNECTION);
       }
     }
-
-    
-    
+ 
     public void receivefile()
     {
+       String read_name = null;
+       String name_file;
+
+       BufferedInputStream buffer_stream;
+       FileOutputStream file_stream;
     
-    System.out.println("procedemos a recibir un archivo");	
-    // pueda que funcione es mejor revisar. 
-    byte[] buffer = new byte[1024];
-    int bytes =0;
+       byte[] buffer_file_name = new byte[1024];
+       byte[] buffer_file = new byte[8192];
+       int bytes_file_name =0;
+       int bytes_file;
         try 
         {
-			bytes = incoming_data.read(buffer);
-		    readMessage = new String(buffer, 0, bytes);
-	        savefile();
-	        System.out.println("leido" + readMessage);
-	        
-		} 
+			bytes_file_name = incoming_data.read(buffer_file_name);
+		    read_name = new String(buffer_file_name, 0, bytes_file_name);
+		    if(read_name != null )
+		    {
+		    name_file = new String(read_name);	
+	    	File directory = new File(Environment.getExternalStorageDirectory() + "/EEGsaved/");
+	    	File data_eeg = new File(directory.getAbsolutePath() , name_file);
+		    
+	    	buffer_stream =new BufferedInputStream(incoming_data);
+	    	file_stream = new FileOutputStream(data_eeg);
+	    	 
+	    	 while ((bytes_file = buffer_stream.read(buffer_file)) > 0)
+	    	 {
+	    	 file_stream.write(buffer_file, 0, bytes_file);
+	    	 }
+	    	 
+	    	 file_stream.flush();
+	    	 file_stream.close();
+	    	 /*esperar por la respuesta del servidor ante la orden*/
+		     wait_response();
+		    }		
+        } 
+        
         catch (IOException e) 
         {
 			// TODO Auto-generated catch block
@@ -356,11 +363,7 @@ public class Management_Connection extends Thread
   
    }
     
-    
-   public void savefile()
-   {
-	   
-   } 
+ 
    
    
    public void send_to_ui(int orden)
@@ -373,6 +376,7 @@ public class Management_Connection extends Thread
     my_Handler_to_ui.sendMessage(msg);   	   
    }
 
+   public void wait_response(){}
 
    
     

@@ -16,5 +16,6 @@
     <string name="not_connected">No Tienes Conexion</string>
     <string name="bluetooth_turn_off">El BLUETOOTH no fue encendido</string>
     <string name="bluetooth_availability">No cuenta con BLUETOOTH</string>
-     <string name="scan_turn_off">No estas escaneando dispositivos</string>
+    <string name="scan_turn_off">No estas escaneando dispositivos</string>
+    <string name="directory_error">Imposible escribir o leer sdCard</string> 
 </resources>
