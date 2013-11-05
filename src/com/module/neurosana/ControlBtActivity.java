@@ -21,7 +21,7 @@ private BluetoothAdapter BluetoothAdapterConn = null;
 ConnectorBtThread connection = null ;
 
 public static final int COMANDO_ENTRANTE = 1;
-public static final int ERROR = 2; 
+public static final int STATE_ENTRANTE = 2; 
 public static final String COMAND = "comando";
 public static final String STATE = "estado";
 
@@ -92,7 +92,7 @@ public static final String STATE = "estado";
                String llego_orden = msg.getData().getString(COMAND);
                System.out.println("capturamos la respuesta del server en la vista" +llego_orden);
             break;
-            case ERROR:
+            case STATE_ENTRANTE:
                String llego_estado = msg.getData().getString(STATE);
                System.out.println("capturamos la respuesta de un estado en la vista" +llego_estado); 
             break;

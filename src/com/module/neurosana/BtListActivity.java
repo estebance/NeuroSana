@@ -49,10 +49,6 @@ public class BtListActivity extends Activity
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		this.registerReceiver(Receiver_Devices, filter);
         
-        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        this.registerReceiver(Receiver_Devices, filter);
-	    
-
 		/*insertamos dispositivos en el adapter y por consiguiente a la vista*/
 		devices_list.setAdapter(bt_list_devices);
 		/*si damos click a un dispositivo?*/
@@ -67,7 +63,6 @@ public class BtListActivity extends Activity
 						String devicedir = deviceinfo.substring(deviceinfo.length() - 17); 
 						// invocamos la llamada al servidor
 						callserver (devicedir);
-					     	
 				}
 					
 				});		
@@ -102,10 +97,6 @@ public class BtListActivity extends Activity
     System.out.println("Dispositivos capturados" +device.getName());
     bt_list_devices.add(device.getName() + "" + device.getAddress());	
     bt_list_devices.notifyDataSetChanged();
-    }
-    else if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action))
-    {
-    System.out.println("boton animado de que termino scan u otra senal");	
     }
     }
     };	
@@ -177,7 +168,7 @@ super.onResume();
 
 bt_list_devices.clear();
 /*escanemos los dispositivos*/
-threadscan();
+ threadscan();
 /*insertamos dispositivos en el adapter y por consiguiente a la vista*/
 devices_list.setAdapter(bt_list_devices);
 

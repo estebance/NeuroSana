@@ -37,10 +37,12 @@ public static final int ERROR_CONNECTION = 3;
 public static final int ERROR_DATA = 4;
 
 
-public ConnectorBtThread( Handler handler ) 
+
+public ConnectorBtThread( Handler handler )
 {
     myState = NO_STATE;
     my_Handler_to_ui = handler;
+    set_My_State(NO_STATE);
 }
 	
 private synchronized void set_My_State(int state) 
@@ -111,7 +113,7 @@ public synchronized void stop() {
 public void send_state_to_ui(int orden)
 {
      ////////////////////// responder a la UI ///////////////////////////////////////
-     Message msg = my_Handler_to_ui.obtainMessage(ControlBtActivity.ERROR);
+     Message msg = my_Handler_to_ui.obtainMessage(ControlBtActivity.STATE_ENTRANTE);
      Bundle bundle = new Bundle();
      bundle.putString(ControlBtActivity.STATE, Integer.toString(orden));
      msg.setData(bundle);
@@ -128,17 +130,14 @@ public class Connect_BtThread extends Thread
 	
   private final BluetoothSocket socket_information_connect;	
   private final UUID MY_UUID = UUID.fromString("0000-11010000-1000-8000-00805F9B34FD");
-
   public Connect_BtThread (BluetoothDevice device) 
     {  
 	  BluetoothSocket socket_connect = null ;
 	  
         try 
         {
-          
-        System.out.println("Informacion sobre la conexion: " + MY_UUID);          
         /* en bt un socket cumple el mismo principio de los socket tcp/ip*/
-        socket_connect = device.createInsecureRfcommSocketToServiceRecord(MY_UUID); 
+        socket_connect = device.createRfcommSocketToServiceRecord(MY_UUID); 
         System.out.println("Conectando: " + MY_UUID);
         	
         }
@@ -148,8 +147,6 @@ public class Connect_BtThread extends Thread
      	send_state_to_ui(ERROR_CONNECTION);
      	set_My_State(ERROR_CONNECTION);
         }
-        
-
         socket_information_connect = socket_connect;
 
     }
@@ -163,7 +160,10 @@ public class Connect_BtThread extends Thread
          try 
          {
          socket_information_connect.connect();
-         System.out.println("Conectado iniciamos la comunicacion: " + MY_UUID);  
+         if(socket_information_connect.isConnected())
+         {
+        	 connected_with_server(socket_information_connect);    	     	 
+         }
          }  
          catch (Exception e) 
          {
@@ -183,8 +183,7 @@ public class Connect_BtThread extends Thread
          
          }                
     
-         connected_with_server(socket_information_connect);
-    
+        
     }
      
 
@@ -204,8 +203,7 @@ public class Connect_BtThread extends Thread
      
 
      
-} 
-         
+}       
  
 public class Management_Connection extends Thread
 { 	
@@ -240,7 +238,6 @@ public class Management_Connection extends Thread
         e.printStackTrace();
      	set_My_State(ERROR_CONNECTION);
         }
-        
          socket_information=socket; 
          incoming_data = temporal_input;
          outgoing_data = temporal_output;
@@ -251,7 +248,8 @@ public class Management_Connection extends Thread
      @Override
 	public void run()
      {   
-    	 int orden = 0; 
+    	 int orden = 0;
+    	 int respuesta_servidor;
     	System.out.println("enviando y recibiendo streams, gestionando la conexion...");                            
               
          while (true) 
@@ -263,7 +261,7 @@ public class Management_Connection extends Thread
           orden = incoming_data.read();
           if(orden == COMANDO_ENVIAR)
           {
-          receivefile();  
+          receivefile();           
           }
           else
           {
@@ -318,9 +316,10 @@ public class Management_Connection extends Thread
     public void receivefile()
     {
        String read_name = null;
+       String tamano;
        String name_file;
 
-       BufferedInputStream buffer_stream;
+       BufferedInputStream buffer_stream = null;
        FileOutputStream file_stream;
     
        byte[] buffer_file_name = new byte[1024];
@@ -331,20 +330,21 @@ public class Management_Connection extends Thread
         {
 			bytes_file_name = incoming_data.read(buffer_file_name);
 		    read_name = new String(buffer_file_name, 0, bytes_file_name);
+			
 		    if(read_name != null )
 		    {
 		    name_file = new String(read_name);	
 	    	File directory = new File(Environment.getExternalStorageDirectory() + "/EEGsaved/");
 	    	File data_eeg = new File(directory.getAbsolutePath() , name_file);
-		    
+	 
+
 	    	buffer_stream =new BufferedInputStream(incoming_data);
 	    	file_stream = new FileOutputStream(data_eeg);
 	    	 
 	    	 while ((bytes_file = buffer_stream.read(buffer_file)) > 0)
-	    	 {
-	    	 file_stream.write(buffer_file, 0, bytes_file);
+	    	 {	
+			 file_stream.write(buffer_file, 0, bytes_file);
 	    	 }
-	    	 
 	    	 file_stream.flush();
 	    	 file_stream.close();
 	    	 /*esperar por la respuesta del servidor ante la orden*/
@@ -376,7 +376,21 @@ public class Management_Connection extends Thread
     my_Handler_to_ui.sendMessage(msg);   	   
    }
 
-   public void wait_response(){}
+   public void wait_response()
+   {
+       
+      int respuesta_servidor;
+	  try
+	  {
+		   respuesta_servidor = incoming_data.read();
+	       System.out.println("response from server"+respuesta_servidor);   
+	  } 
+	  catch (IOException e) 
+	  {
+		e.printStackTrace();
+	  }
+
+   }
 
    
     
