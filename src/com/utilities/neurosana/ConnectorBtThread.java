@@ -27,6 +27,7 @@ private final Handler my_Handler_to_ui;
 private Connect_BtThread my_Connect;
 private Management_Connection my_Connected;
 private int myState;
+public String name_file = null; 
 
 
 /*Estados de la conexion*/
@@ -323,7 +324,7 @@ public class Management_Connection extends Thread
        FileOutputStream file_stream;
     
        byte[] buffer_file_name = new byte[1024];
-       byte[] buffer_file = new byte[8192];
+       byte[] buffer_file = new byte[64];
        int bytes_file_name =0;
        int bytes_file;
         try 
@@ -336,16 +337,25 @@ public class Management_Connection extends Thread
 		    name_file = new String(read_name);	
 	    	File directory = new File(Environment.getExternalStorageDirectory() + "/EEGsaved/");
 	    	File data_eeg = new File(directory.getAbsolutePath() , name_file);
+	    	/*ponemos el nombre del archivo*/
+	    	set_name_file(name_file);
 	 
 
 	    	buffer_stream =new BufferedInputStream(incoming_data);
 	    	file_stream = new FileOutputStream(data_eeg);
 	    	 
-	    	 while ((bytes_file = buffer_stream.read(buffer_file)) > 0)
-	    	 {	
-			 file_stream.write(buffer_file, 0, bytes_file);
+	    	 while ((bytes_file = buffer_stream.read(buffer_file)) != 0)
+	    	 {
+	    	 System.out.println(bytes_file);	
+	    	 if(bytes_file == 1)
+	    	 {
+	    	 break;
 	    	 }
-	    	 file_stream.flush();
+	    	 else
+	    	 {
+	    	 file_stream.write(buffer_file, 0, bytes_file);
+			 file_stream.flush();}
+	    	 }
 	    	 file_stream.close();
 	    	 /*esperar por la respuesta del servidor ante la orden*/
 		     wait_response();
@@ -382,7 +392,9 @@ public class Management_Connection extends Thread
       int respuesta_servidor;
 	  try
 	  {
+		   System.out.println("esperando respuesta");
 		   respuesta_servidor = incoming_data.read();
+		   send_to_ui(respuesta_servidor);
 	       System.out.println("response from server"+respuesta_servidor);   
 	  } 
 	  catch (IOException e) 
@@ -391,10 +403,22 @@ public class Management_Connection extends Thread
 	  }
 
    }
-
-   
     
-}}
+}
+
+
+public void set_name_file(String name)
+{
+	 name_file = name;   
+}
+
+public String get_namefile()
+{
+	return name_file;   
+}
+
+
+}
     	
 
 

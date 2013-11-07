@@ -135,7 +135,9 @@ public void callserver (String devicedir)
 connector.cancelDiscovery();
 Intent control_bt_server = new Intent(this , ControlBtActivity.class);
 control_bt_server.putExtra("btdir", devicedir);
+control_bt_server.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
 startActivity(control_bt_server);
+finish();
 }   
 
 

@@ -145,7 +145,7 @@ public class NeuroActivity extends Activity
 		 if(turn_on_bluetooth)
 		 {
 		 Intent listdevices = new Intent(this, BtListActivity.class);
-		 startActivity(listdevices);			 
+		 startActivityForResult(listdevices , CALLID);
 		 }
 			
 		}

@@ -1,14 +1,19 @@
 package com.module.neurosana;
 
+import java.io.File;
+
 import com.utilities.neurosana.ConnectorBtThread;
 import com.utilities.neurosana.ManageFiles;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -25,6 +30,9 @@ public static final int STATE_ENTRANTE = 2;
 public static final String COMAND = "comando";
 public static final String STATE = "estado";
 
+///
+
+String fileuri;
 	
 	
 	@Override
@@ -91,6 +99,13 @@ public static final String STATE = "estado";
             case COMANDO_ENTRANTE:            	
                String llego_orden = msg.getData().getString(COMAND);
                System.out.println("capturamos la respuesta del server en la vista" +llego_orden);
+               int orden = Integer.parseInt(llego_orden);
+               if(orden == 5)
+               {
+            	String nombre_archivo = connection.get_namefile(); 
+            	get_uri_file(nombre_archivo);
+               }
+              
             break;
             case STATE_ENTRANTE:
                String llego_estado = msg.getData().getString(STATE);
@@ -123,5 +138,26 @@ public static final String STATE = "estado";
 
 	return state; 
    }
+	
+	
+	public void return_to_first_activity(View v)
+	{
+	    Intent data = new Intent();
+	    data.putExtra("fileuri", fileuri);
+        setResult(RESULT_OK, data);
+        finish();		
+	}
+	
+	public void get_uri_file( String fileselected)
+	{
+		File directory = new File(Environment.getExternalStorageDirectory() + "/EEGsaved");
+		File file_selected = new File(directory, fileselected);
+  	    Uri uri_file = Uri.fromFile(file_selected);
+  	    fileuri = uri_file.toString(); 
+        System.out.println("seleccionado" + uri_file);
+      
+	}
+	
+	
 	
 }

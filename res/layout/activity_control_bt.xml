@@ -16,6 +16,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="41dp"
         android:onClick="command_capture"
-        android:text="Button" />
+        android:text="Capture" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button1bt_control_activity"
+        android:layout_centerVertical="true"
+        android:onClick="return_to_first_activity"
+        android:text="Return" />
 
 </RelativeLayout>
