@@ -1,7 +1,6 @@
 package com.utilities.neurosana;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,12 +35,14 @@ public static final int STATE_CONNECTING = 1;
 public static final int STATE_CONNECTED = 2;  
 public static final int ERROR_CONNECTION = 3;
 public static final int ERROR_DATA = 4;
+public static final int BUSSY = 5;
+public static  final int CONNECTION_CLOSE= 6;
+public static final int FREE = 7;
 
 
 
 public ConnectorBtThread( Handler handler )
 {
-    myState = NO_STATE;
     my_Handler_to_ui = handler;
     set_My_State(NO_STATE);
 }
@@ -56,7 +57,7 @@ private synchronized void set_My_State(int state)
 public synchronized int get_My_State() 
 {
     return myState;
-}	
+}
 
 public synchronized void connect_client(BluetoothDevice device) 
 {
@@ -69,16 +70,18 @@ public synchronized void connect_client(BluetoothDevice device)
     /* vamos a iniciar un proceso de conexion */
     
     my_Connect = new Connect_BtThread(device);
-    my_Connect.start();
     set_My_State(STATE_CONNECTING);
+    my_Connect.start();
+    
 }
 
 
 public synchronized void connected_with_server (BluetoothSocket socket) 
 {
     my_Connected = new Management_Connection(socket);
-    my_Connected.start();
     set_My_State(STATE_CONNECTED);
+    my_Connected.start();
+    
 }
 
 
@@ -100,14 +103,21 @@ public synchronized void stop() {
     public void setinfo (int data)
     { 
     	   Management_Connection send;
-          // sincronizando para poder ser empleado 
+          /* sincronizando para poder ser empleado */
           synchronized (this) 
           {
-           if (myState != STATE_CONNECTED) return;
+           if (myState != STATE_CONNECTED)
+           { 
+           return;
+           }
+           else
+           {
            send = my_Connected;
+           send.write(data);
+           }
           }
           
-          send.write(data);
+
     }
     
     
@@ -145,9 +155,10 @@ public class Connect_BtThread extends Thread
         catch(IOException e)
         {
         System.out.println("no es posible crear el socket" + e);
-     	send_state_to_ui(ERROR_CONNECTION);
+        e.printStackTrace();
      	set_My_State(ERROR_CONNECTION);
         }
+        
         socket_information_connect = socket_connect;
 
     }
@@ -163,23 +174,24 @@ public class Connect_BtThread extends Thread
          socket_information_connect.connect();
          if(socket_information_connect.isConnected())
          {
-        	 connected_with_server(socket_information_connect);    	     	 
+         connected_with_server(socket_information_connect);    	     	 
          }
          }  
          catch (Exception e) 
          {
       	 System.out.println("problemas para realizar una conexion estable:"+e); 
-      	 e.printStackTrace();
+         e.printStackTrace();
+      	 set_My_State(ERROR_CONNECTION);
+      	 
          try
          {
-         socket_information_connect.close();	 
+         socket_information_connect.close();
+         set_My_State(CONNECTION_CLOSE);
          }
          catch(Exception ex)
          {
          ex.printStackTrace();
          System.out.println("problema al cerrar el socket");
-       	 send_state_to_ui(ERROR_CONNECTION);
-       	 set_My_State(ERROR_CONNECTION);
          }
          
          }                
@@ -193,6 +205,7 @@ public class Connect_BtThread extends Thread
         try 
         {
         socket_information_connect.close();
+        set_My_State(CONNECTION_CLOSE);
         } 
         catch (IOException e) 
         {
@@ -220,7 +233,8 @@ public class Management_Connection extends Thread
     private static final int COMANDO_CANCELAR=3;
     private static final int COMANDO_INICIAR=4; ;
     private static final int COMANDO_TERMINADO=5;
-    private static final int COMANDO_CANCELADO=5;
+    private static final int COMANDO_CANCELADO=6;
+    private static final int COMANDO_INICIADO=7;
 	
     
     public Management_Connection(BluetoothSocket socket) 
@@ -250,8 +264,8 @@ public class Management_Connection extends Thread
 	public void run()
      {   
     	 int orden = 0;
-    	 int respuesta_servidor;
-    	System.out.println("enviando y recibiendo streams, gestionando la conexion...");                            
+    	
+    	 System.out.println("enviando y recibiendo streams, gestionando la conexion...");                            
               
          while (true) 
          {
@@ -260,16 +274,34 @@ public class Management_Connection extends Thread
           /* recibiendo respuestas del servidor */
         	 
           orden = incoming_data.read();
+          
+          
           if(orden == COMANDO_ENVIAR)
           {
           receivefile();           
           }
+          
+          else if(orden == COMANDO_INICIADO)
+          {
+        	set_My_State(BUSSY);  
+        	sleep_capture_data();	
+        	try
+        	{
+            set_My_State(FREE);
+       	    send_to_ui(incoming_data.read());
+        	}
+        	catch(Exception e)
+        	{
+        	e.printStackTrace();	
+        	}
+          }
+          
           else
           {
-          send_to_ui(orden);
+           send_to_ui(orden);
           }
          
-         }  
+        }  
          
          catch (IOException e) 
          {
@@ -294,9 +326,7 @@ public class Management_Connection extends Thread
       catch (IOException e) 
       {
  	  System.out.println("error al enviar solicitud:"+e); 
- 	  send_state_to_ui(ERROR_CONNECTION);
- 	  set_My_State(ERROR_CONNECTION); 
- 	  
+ 	  set_My_State(ERROR_CONNECTION); 	  
       }
      
      }
@@ -306,29 +336,28 @@ public class Management_Connection extends Thread
       try 
        {
  	    socket_information.close();
+ 	    set_My_State(CONNECTION_CLOSE);
        } 
       catch (IOException e) 
       {
         System.out.println("error al cerrar socket:"+e);  
-        send_state_to_ui(ERROR_CONNECTION);
+        set_My_State(ERROR_CONNECTION);
       }
     }
  
     public void receivefile()
     {
        String read_name = null;
-       String tamano;
        String name_file;
-
        BufferedInputStream buffer_stream = null;
-       FileOutputStream file_stream;
-    
+       FileOutputStream file_stream;   
        byte[] buffer_file_name = new byte[1024];
        byte[] buffer_file = new byte[64];
        int bytes_file_name =0;
-       int bytes_file;
+       int bytes_file , respuesta_servidor;;
         try 
         {
+        	set_My_State(BUSSY);
 			bytes_file_name = incoming_data.read(buffer_file_name);
 		    read_name = new String(buffer_file_name, 0, bytes_file_name);
 			
@@ -358,7 +387,11 @@ public class Management_Connection extends Thread
 	    	 }
 	    	 file_stream.close();
 	    	 /*esperar por la respuesta del servidor ante la orden*/
-		     wait_response();
+	    	 
+	    	   System.out.println("esperando respuesta");
+			   respuesta_servidor = incoming_data.read();
+		       set_My_State(FREE);
+			   send_to_ui(respuesta_servidor);
 		    }		
         } 
         
@@ -366,43 +399,13 @@ public class Management_Connection extends Thread
         {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			send_state_to_ui(ERROR_CONNECTION);
+			set_My_State(ERROR_CONNECTION);
 		} 
        
 
   
    }
-    
- 
-   
-   
-   public void send_to_ui(int orden)
-   {
-    ////////////////////// responder a la UI ///////////////////////////////////////
-    Message msg = my_Handler_to_ui.obtainMessage(ControlBtActivity.COMANDO_ENTRANTE);
-    Bundle bundle = new Bundle();
-    bundle.putString(ControlBtActivity.COMAND, Integer.toString(orden));
-    msg.setData(bundle);
-    my_Handler_to_ui.sendMessage(msg);   	   
-   }
 
-   public void wait_response()
-   {
-       
-      int respuesta_servidor;
-	  try
-	  {
-		   System.out.println("esperando respuesta");
-		   respuesta_servidor = incoming_data.read();
-		   send_to_ui(respuesta_servidor);
-	       System.out.println("response from server"+respuesta_servidor);   
-	  } 
-	  catch (IOException e) 
-	  {
-		e.printStackTrace();
-	  }
-
-   }
     
 }
 
@@ -417,6 +420,30 @@ public String get_namefile()
 	return name_file;   
 }
 
+
+public void  sleep_capture_data()
+{
+	 try
+     {
+     Thread.sleep(10000);	
+     }
+     catch(Exception e)
+     {
+     e.printStackTrace();	
+     }        
+	 
+     
+}
+
+public void send_to_ui(int orden)
+{
+ ////////////////////// responder a la UI ///////////////////////////////////////
+ Message msg = my_Handler_to_ui.obtainMessage(ControlBtActivity.COMANDO_ENTRANTE);
+ Bundle bundle = new Bundle();
+ bundle.putString(ControlBtActivity.COMAND, Integer.toString(orden));
+ msg.setData(bundle);
+ my_Handler_to_ui.sendMessage(msg);   	   
+}
 
 }
     	

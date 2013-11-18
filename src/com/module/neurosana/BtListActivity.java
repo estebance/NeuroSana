@@ -1,5 +1,7 @@
 package com.module.neurosana;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -8,13 +10,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class BtListActivity extends Activity 
@@ -27,7 +28,11 @@ public class BtListActivity extends Activity
 	/*adaptador bluetooth para buscar archivos*/
 	BluetoothAdapter connector; 	
 	
-
+    /* array name and direction bt devices*/
+	
+	ArrayList<String> devices_name = new ArrayList<String>();
+	ArrayList<String> devices_dir = new ArrayList<String>();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -41,7 +46,10 @@ public class BtListActivity extends Activity
 		
 		/*declaramos un conector*/		
 		connector =  BluetoothAdapter.getDefaultAdapter();	
+		/*limpiamos los array*/
 	    bt_list_devices.clear();
+	    devices_name.clear();
+	    devices_dir.clear();
 	    /*escanemos los dispositivos*/
 	    threadscan();
 		/*encontramos un dispositivo bluetooth?*/
@@ -59,10 +67,14 @@ public class BtListActivity extends Activity
 						// TODO Auto-generated method stub
 						// capturamos toda la informacion nombre y direccion del dispositivo
 						String deviceinfo = bt_list_devices.getItem(position).toString();
-						// obtenemos la direccion del dispositivo -> es la unica que importa :D
-						String devicedir = deviceinfo.substring(deviceinfo.length() - 17); 
+						
+						// obtenemos la direccion del dispositivo
+						int index_array  = devices_name.indexOf(deviceinfo);						
+						String direction = devices_dir.get(index_array);						
+						System.out.println("el nombre es es"+deviceinfo);						
+						System.out.println("la direccion es"+direction);
 						// invocamos la llamada al servidor
-						callserver (devicedir);
+						callserver (direction);
 				}
 					
 				});		
@@ -77,10 +89,24 @@ public class BtListActivity extends Activity
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId()) 
+		{
+        case R.id.update_list_devices:
+            update();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }			
+	}	
 	
-    public void update(View v)
+    public void update()
     {
-    bt_list_devices.clear(); 
+    bt_list_devices.clear();
+    devices_name.clear();
+    devices_dir.clear();
     threadscan();	
     }	
 
@@ -94,9 +120,15 @@ public class BtListActivity extends Activity
     if (BluetoothDevice.ACTION_FOUND.equals(action)) 
     {
     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-    System.out.println("Dispositivos capturados" +device.getName());
-    bt_list_devices.add(device.getName() + "" + device.getAddress());	
+    System.out.println("Dispositivos capturados" +device.getName()+device.getAddress());
+    bt_list_devices.add(device.getName());
+    /*informamos que cambio y actualizamos la vista*/
     bt_list_devices.notifyDataSetChanged();
+    
+    /*anadimos valores a la lista de dispositivos*/
+    devices_name.add(device.getName());
+    devices_dir.add(device.getAddress());
+    
     }
     }
     };	
@@ -166,9 +198,10 @@ if (connector != null) {
 protected void onResume()
 {
 super.onResume();
-/*escanemos los dispositivos*/
-
+/*limpiamos los array*/
 bt_list_devices.clear();
+devices_name.clear();
+devices_dir.clear();
 /*escanemos los dispositivos*/
  threadscan();
 /*insertamos dispositivos en el adapter y por consiguiente a la vista*/
