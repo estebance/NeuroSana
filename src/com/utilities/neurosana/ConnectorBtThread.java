@@ -235,7 +235,7 @@ public class Management_Connection extends Thread
     private static final int COMANDO_TERMINADO=5;
     private static final int COMANDO_CANCELADO=6;
     private static final int COMANDO_INICIADO=7;
-	
+    private static final int COMANDO_FINALIZADO=8;	
     
     public Management_Connection(BluetoothSocket socket) 
     {    	
@@ -264,6 +264,7 @@ public class Management_Connection extends Thread
 	public void run()
      {   
     	 int orden = 0;
+    	 int respuesta = 0; 
     	
     	 System.out.println("enviando y recibiendo streams, gestionando la conexion...");                            
               
@@ -281,17 +282,19 @@ public class Management_Connection extends Thread
           receivefile();           
           }
           
-          else if(orden == COMANDO_INICIADO)
+          if(orden == COMANDO_INICIADO)
           {
         	set_My_State(BUSSY);  
         	sleep_capture_data();	
         	try
         	{
-            set_My_State(FREE);
-       	    send_to_ui(incoming_data.read());
+            set_My_State(STATE_CONNECTED);
+            respuesta = incoming_data.read();
+       	    send_to_ui(respuesta);
         	}
         	catch(Exception e)
         	{
+        	set_My_State(NO_STATE);	
         	e.printStackTrace();	
         	}
           }
@@ -303,7 +306,7 @@ public class Management_Connection extends Thread
          
         }  
          
-         catch (IOException e) 
+         catch (Exception e) 
          {
       	 System.out.println("error en la comunicacion:"+e); 
       	 e.printStackTrace();
@@ -390,8 +393,9 @@ public class Management_Connection extends Thread
 	    	 
 	    	   System.out.println("esperando respuesta");
 			   respuesta_servidor = incoming_data.read();
-		       set_My_State(FREE);
-			   send_to_ui(respuesta_servidor);
+		       send_to_ui(respuesta_servidor);
+		       set_My_State(STATE_CONNECTED );
+			   
 		    }		
         } 
         

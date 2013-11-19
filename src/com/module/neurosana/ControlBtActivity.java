@@ -51,7 +51,7 @@ private static final int COMANDO_INICIAR=4;
 private static final int COMANDO_TERMINADO=5;
 private static final int COMANDO_CANCELADO=6;
 private static final int COMANDO_INICIADO=7;
-
+private static final int COMANDO_FINALIZADO=8;
 /*Elementos de la vista*/
 
 TextView state_connection_view;
@@ -235,8 +235,7 @@ Button capture , cancel , save , exit ;
   case COMANDO_TERMINADO:   
 	    Toast.makeText(this, R.string.finished_acquiring, Toast.LENGTH_LONG).show();
 	   	String nombre_archivo = connection.get_namefile(); 
-	   	get_uri_file(nombre_archivo); 
-	   		  
+	   	get_uri_file(nombre_archivo); 	   		  
   break;
   case COMANDO_CANCELADO:
 	    Toast.makeText(this, R.string.cancel_acquiring, Toast.LENGTH_LONG).show(); 
@@ -244,6 +243,10 @@ Button capture , cancel , save , exit ;
 
   case COMANDO_INICIADO:
 	    Toast.makeText(this, R.string.init_acquiring, Toast.LENGTH_LONG).show(); 
+  break;  
+  
+  case COMANDO_FINALIZADO:
+	    Toast.makeText(this, R.string.finished_acquiring, Toast.LENGTH_LONG).show(); 
   break;  
   
   
@@ -260,6 +263,7 @@ Button capture , cancel , save , exit ;
   {
   case NO_STATE:            	
     state_connection_view.setText(R.string.free);
+    disable_buttons(0);
   break;
   
   case STATE_CONNECTING:
@@ -269,7 +273,7 @@ Button capture , cancel , save , exit ;
   
   case STATE_CONNECTED:
 	  state_connection_view.setText(R.string.connected);
-	  enable_buttons();
+	  enable_buttons(1);
   break; 
       	  
   case ERROR_CONNECTION:
@@ -279,18 +283,13 @@ Button capture , cancel , save , exit ;
   
   case ERROR_DATA:
 	  state_connection_view.setText(R.string.error_connection);
+	  disable_buttons(0);
   break;
   
   case BUSSY:
 	  state_connection_view.setText(R.string.bussy);
 	  disable_buttons(1);
-  break; 
-  
-  case FREE:
-	  state_connection_view.setText(R.string.free);
-	  enable_buttons();
-  break;	  
-  
+  break;  	  
   } 
 }
 //  
@@ -306,12 +305,15 @@ exit.setEnabled(false);
 }
 }  
 //
-public void enable_buttons()
+public void enable_buttons(int option)
+{
+exit.setEnabled(true);  
+if (option ==1)
 {
 capture.setEnabled(true);
 save.setEnabled(true);
-cancel.setEnabled(true);
-exit.setEnabled(true);  
+cancel.setEnabled(true);	
+}
 }
 
 }

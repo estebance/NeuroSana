@@ -27,11 +27,11 @@
     <string name="go_out">Salir</string>
     
     
-    <string name="free">Libre</string>
     <string name="bussy">Ocupado</string>
     <string name="error_connection">Error Conexion</string>
     <string name="connected">Conectado</string>
     <string name="connecting">Conectando</string>
+    <string name="free">Sin Estado</string>
     
     <string name="cancel_acquiring">Cancelada la adquisicion de datos</string>
     <string name="finished_acquiring">Terminada la adquisicion de datos</string>
