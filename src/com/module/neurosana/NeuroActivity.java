@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class NeuroActivity extends Activity
 	
 	/*caracteristicas de la vista*/
 	TextView file_directory_view;
+	Button button_view_eeg;
 	
 	/*adaptador para bluetooth saber si esta encendido*/
 	BluetoothAdapter connector; 
@@ -42,6 +44,11 @@ public class NeuroActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_neuro);
+		
+		/*traer boton view*/
+		
+		button_view_eeg = (Button)findViewById(R.id.button3neuro_activity);
+		button_view_eeg.setEnabled(false);
 		
 		/*Adapter para encender bluetooth*/
 		connector =  BluetoothAdapter.getDefaultAdapter();
@@ -77,6 +84,9 @@ public class NeuroActivity extends Activity
 	        	result_file_uri = data.getExtras().getString("fileuri");
 	        	/*Imprimimos  el file uri en el textview */
 	            file_directory_view.setText(result_file_uri);
+	            /*activamos el boton de visualizar edf*/
+	            button_view_eeg.setEnabled(true);
+	            
 	        	
 	        }
 	    }
@@ -150,6 +160,12 @@ public class NeuroActivity extends Activity
 			
 		}
 
+	}
+	
+	public void view_eeg(View v)
+	{
+	Intent view_file = new Intent(this, ChartActivity.class);
+	startActivity(view_file);
 	}
 	
 	
