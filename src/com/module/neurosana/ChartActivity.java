@@ -1,74 +1,130 @@
 package com.module.neurosana;
 
+
 import java.text.DecimalFormat;
-import java.util.Random;
+import java.util.Arrays;
 
-import android.os.Bundle;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.util.FloatMath;
-import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-
+import com.androidplot.Plot;
+import com.androidplot.util.Redrawer;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYStepMode;
+import com.utilities.neurosana.ReadEdf;
 
-@SuppressLint("FloatMath")
-public class ChartActivity extends Activity implements OnTouchListener 
+import android.os.Bundle;
+import android.view.Menu;
+import android.app.Activity;
+import android.graphics.Color;
+
+
+public class ChartActivity extends Activity 
 {
+ private static final int X_RANGE_SIZE = 100;	
+ private XYPlot myHistoryPlot = null;
+ private SimpleXYSeries chanel_a_HistorySeries = null;
+ private SimpleXYSeries chanel_b_HistorySeries = null;
+ private SimpleXYSeries chanel_c_HistorySeries = null;
+ private SimpleXYSeries chanel_d_HistorySeries = null;
+ private SimpleXYSeries chanel_e_HistorySeries = null;
+ private SimpleXYSeries chanel_f_HistorySeries = null;
+ private SimpleXYSeries chanel_g_HistorySeries = null;
+ private SimpleXYSeries chanel_h_HistorySeries = null;
+ private SimpleXYSeries chanel_i_HistorySeries = null;
+ private SimpleXYSeries chanel_j_HistorySeries = null;
+ private SimpleXYSeries chanel_k_HistorySeries = null;
+ private SimpleXYSeries chanel_l_HistorySeries = null;
+ private SimpleXYSeries chanel_m_HistorySeries = null;
+ private Redrawer redrawer;
+
+ 
+ ReadEdf my_edf_data = null; 
+ String[] edf_header_chanel = null;
+ int[] chanel_number = new int[36];
+ int size_signal;
+ int size_limit = 0;
+ double[] signal_a , signal_b , signal_c , signal_d , signal_e , signal_f , signal_g , signal_h , signal_i , signal_j , signal_k , signal_l , signal_m ; 
 	
-private XYPlot eeg_chart;
-private SimpleXYSeries[] data_chart = null;
-private static final int SERIES_SIZE = 200;
-
-private PointF minimo_valor;
-private PointF maximo_valor;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chart);
-	
-        eeg_chart = (XYPlot) findViewById(R.id.xyplot_eeg1);
-        eeg_chart.setOnTouchListener(this);
+		
+		
+		/* to plot*/
+        myHistoryPlot = (XYPlot) findViewById(R.id.xyplot_eeg1);
+        chanel_a_HistorySeries = new SimpleXYSeries("Chanel 1");
+        chanel_a_HistorySeries.useImplicitXVals();
+        chanel_b_HistorySeries = new SimpleXYSeries("Chanel 2");
+        chanel_b_HistorySeries.useImplicitXVals();
+        chanel_c_HistorySeries = new SimpleXYSeries("Chanel 3");
+        chanel_c_HistorySeries.useImplicitXVals();
+        chanel_d_HistorySeries = new SimpleXYSeries("Chanel 4");
+        chanel_d_HistorySeries.useImplicitXVals();
+        chanel_e_HistorySeries = new SimpleXYSeries("Chanel 5");
+        chanel_e_HistorySeries.useImplicitXVals();
+        chanel_f_HistorySeries = new SimpleXYSeries("Chanel 6");
+        chanel_f_HistorySeries.useImplicitXVals();
+        chanel_g_HistorySeries = new SimpleXYSeries("Chanel 7");
+        chanel_g_HistorySeries.useImplicitXVals();
+        chanel_h_HistorySeries = new SimpleXYSeries("Chanel 8");
+        chanel_h_HistorySeries.useImplicitXVals();
+        chanel_h_HistorySeries = new SimpleXYSeries("Chanel 9");
+        chanel_h_HistorySeries.useImplicitXVals();
+        chanel_i_HistorySeries = new SimpleXYSeries("Chanel 10");
+        chanel_i_HistorySeries.useImplicitXVals();
+        chanel_j_HistorySeries = new SimpleXYSeries("Chanel 11");
+        chanel_j_HistorySeries.useImplicitXVals();
+        chanel_k_HistorySeries = new SimpleXYSeries("Chanel 12");
+        chanel_k_HistorySeries.useImplicitXVals();
+        chanel_l_HistorySeries = new SimpleXYSeries("Chanel 13");
+        chanel_l_HistorySeries.useImplicitXVals();
+        chanel_m_HistorySeries = new SimpleXYSeries("Chanel 14");
+        chanel_m_HistorySeries.useImplicitXVals();
+
         
-        //Plot layout configurations
-        eeg_chart.getGraphWidget().setTicksPerRangeLabel(1);
-        eeg_chart.getGraphWidget().setTicksPerDomainLabel(1);
-        eeg_chart.getGraphWidget().setRangeValueFormat(new DecimalFormat("#####.##"));
-        eeg_chart.getGraphWidget().setDomainValueFormat(new DecimalFormat("#####.##"));
-        eeg_chart.getGraphWidget().setRangeLabelWidth(20);
-        eeg_chart.getGraphWidget().setPadding(20, 20, 20, 20);
-        eeg_chart.setRangeLabel("");
-        eeg_chart.setDomainLabel("");
-      
-        /*configuracion de lineas y valores a graficar*/
-        data_chart = new SimpleXYSeries[4];
+        myHistoryPlot.setRangeBoundaries(3750, 5000, BoundaryMode.FIXED); // revisar     
+        myHistoryPlot.setDomainBoundaries(0, X_RANGE_SIZE, BoundaryMode.FIXED); // revisar
+        myHistoryPlot.addSeries(chanel_a_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 100, 200), null, null, null));
+        myHistoryPlot.addSeries(chanel_b_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 200, 100), null, null, null));
+        myHistoryPlot.addSeries(chanel_c_HistorySeries,new LineAndPointFormatter(Color.rgb(200, 100, 100), null, null, null));
+        myHistoryPlot.addSeries(chanel_d_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 100, 200), null, null, null));
+        myHistoryPlot.addSeries(chanel_e_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 200, 100), null, null, null));
+        myHistoryPlot.addSeries(chanel_f_HistorySeries,new LineAndPointFormatter(Color.rgb(200, 100, 100), null, null, null));
+        myHistoryPlot.addSeries(chanel_g_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 100, 200), null, null, null));
+        myHistoryPlot.addSeries(chanel_h_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 200, 100), null, null, null));
+        myHistoryPlot.addSeries(chanel_i_HistorySeries,new LineAndPointFormatter(Color.rgb(200, 100, 100), null, null, null));
+        myHistoryPlot.addSeries(chanel_j_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 100, 200), null, null, null));
+        myHistoryPlot.addSeries(chanel_k_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 200, 100), null, null, null));
+        myHistoryPlot.addSeries(chanel_l_HistorySeries,new LineAndPointFormatter(Color.rgb(200, 100, 100), null, null, null));
+        myHistoryPlot.addSeries(chanel_m_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 100, 200), null, null, null));
+                
         
-        int scale = 1;
-        for (int i = 0; i < 4; i++, scale *= 5) {
-            data_chart[i] = new SimpleXYSeries("S" + i);
-            populateSeries(data_chart[i], scale);
-        }
-        
-        eeg_chart.addSeries(data_chart[3],new LineAndPointFormatter(Color.rgb(50, 0, 0), null, null , null));
-        eeg_chart.addSeries(data_chart[2],new LineAndPointFormatter(Color.rgb(50, 50, 0), null,null, null));
-        eeg_chart.addSeries(data_chart[1],new LineAndPointFormatter(Color.rgb(0, 50, 0), null,null, null));
-        eeg_chart.addSeries(data_chart[0],new LineAndPointFormatter(Color.rgb(0, 0, 0), null,null, null));
-        eeg_chart.redraw();
-        eeg_chart.calculateMinMaxVals();
-        minimo_valor = new PointF(eeg_chart.getCalculatedMinX().floatValue(), eeg_chart.getCalculatedMinY().floatValue());
-        maximo_valor = new PointF(eeg_chart.getCalculatedMaxX().floatValue(), eeg_chart.getCalculatedMaxY().floatValue());        
-         
-        
+        myHistoryPlot.setDomainStepMode(XYStepMode.INCREMENT_BY_VAL);
+        myHistoryPlot.setDomainStepValue(X_RANGE_SIZE/100);
+        myHistoryPlot.setTicksPerRangeLabel(3); // revisar
+        myHistoryPlot.setDomainLabel("Domain");
+        myHistoryPlot.getDomainLabelWidget().pack();
+        myHistoryPlot.setRangeLabel("Range");
+        myHistoryPlot.getRangeLabelWidget().pack();
+
+        myHistoryPlot.setRangeValueFormat(new DecimalFormat("#"));
+        myHistoryPlot.setDomainValueFormat(new DecimalFormat("#"));		
+		
+        redrawer = new Redrawer(Arrays.asList(new Plot[]{myHistoryPlot}),100, false);
+		
+        /*final to plot*/
+		
+        /*to read edf*/
+		my_edf_data = new ReadEdf();
+		my_edf_data.init_parser_file();
+		edf_header_chanel = my_edf_data.get_label_chanel();
+		my_edf_data.get_signal();
+		run_data_charge();
+		
 	}
 	
 	
@@ -82,105 +138,179 @@ private PointF maximo_valor;
 	}
 
 	
-    private void populateSeries(SimpleXYSeries series, int max) 
-    {
-        Random r = new Random();
-        for(int i = 0; i < SERIES_SIZE; i++) {
-            series.addLast(i, r.nextInt(max));
-        }
+	public void duerme(int tie)
+	{
+		
+	try {
+		Thread.sleep(tie);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		
+	}
+	
+	@Override
+    public void onResume() {
+        super.onResume();
+        redrawer.start();
     }
-
-    // Definition of the touch states
-    static final int NONE = 0;
-    static final int ONE_FINGER_DRAG = 1;
-    static final int TWO_FINGERS_DRAG = 2;
-    int mode = NONE;
-
-    PointF firstFinger;
-    float distBetweenFingers;
-    boolean stopThread = false;
 
     @Override
-    public boolean onTouch(View arg0, MotionEvent event) {
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN: // Start gesture
-                firstFinger = new PointF(event.getX(), event.getY());
-                mode = ONE_FINGER_DRAG;
-                stopThread = true;
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-                mode = NONE;
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN: // second finger
-                distBetweenFingers = spacing(event);
-                // the distance check is done to avoid false alarms
-                if (distBetweenFingers > 5f) {
-                    mode = TWO_FINGERS_DRAG;
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (mode == ONE_FINGER_DRAG) {
-                    PointF oldFirstFinger = firstFinger;
-                    firstFinger = new PointF(event.getX(), event.getY());
-                    scroll(oldFirstFinger.x - firstFinger.x);
-                    eeg_chart.setDomainBoundaries(minimo_valor.x, maximo_valor.x,
-                            BoundaryMode.FIXED);
-                    eeg_chart.redraw();
-
-                } else if (mode == TWO_FINGERS_DRAG) {
-                    float oldDist = distBetweenFingers;
-                    distBetweenFingers = spacing(event);
-                    zoom(oldDist / distBetweenFingers);
-                    eeg_chart.setDomainBoundaries(minimo_valor.x, maximo_valor.x,
-                            BoundaryMode.FIXED);
-                    eeg_chart.redraw();
-                }
-                break;
-        }
-        return true;
+    public void onPause() {
+        redrawer.pause();
+        super.onPause();
     }
 
-    private void zoom(float scale) {
-        float domainSpan = maximo_valor.x - minimo_valor.x;
-        float domainMidPoint = maximo_valor.x - domainSpan / 2.0f;
-        float offset = domainSpan * scale / 2.0f;
-
-        minimo_valor.x = domainMidPoint - offset;
-        maximo_valor.x = domainMidPoint + offset;
-
-        minimo_valor.x = Math.min(minimo_valor.x, data_chart[3].getX(data_chart[3].size() - 3)
-                .floatValue());
-        maximo_valor.x = Math.max(maximo_valor.x, data_chart[0].getX(1).floatValue());
-        clampToDomainBounds(domainSpan);
+    @Override
+    public void onDestroy() {
+        redrawer.finish();
+        super.onDestroy();
     }
 
-    private void scroll(float pan) {
-        float domainSpan = maximo_valor.x - minimo_valor.x;
-        float step = domainSpan / eeg_chart.getWidth();
-        float offset = pan * step;
-        minimo_valor.x = minimo_valor.x + offset;
-        maximo_valor.x = maximo_valor.x + offset;
-        clampToDomainBounds(domainSpan);
-    }
+    
+    
+    
+    
+    public void other()
+    {
+    /*	
+		int increment = 50 ;
+	    int resta = 0 ;
+		
+	   for(int a =0; a < edf_header_chanel.length ; a++)
+	   {
+		System.out.println(edf_header_chanel[a]);   
+		chanel_number[a] = a ;   
+	   }   
+	   
+	   size_signal = my_edf_data.get_size_data();
+	   System.out.println("tamano senal"+size_signal);   
+	  
+	   while(true){
+	   for(int i = 0 ; i < size_signal ; i+=increment)
+	   {	   
+	   resta = size_signal - size_limit;
+	   if(resta < 50)
+	   {
+		increment = resta;   
+	   }
+	   size_limit += increment; 
+	   signal =  my_edf_data.my_signal_part(i, chanel_number[1], size_limit);   
+	   
+	   System.out.println("el limite de tamaño es_:"+size_limit);	 
+	   System.out.println("el incremento es_:"+increment);
 
-    private void clampToDomainBounds(float domainSpan) {
-        float leftBoundary = data_chart[0].getX(0).floatValue();
-        float rightBoundary = data_chart[3].getX(data_chart[3].size() - 1).floatValue();
-        // enforce left scroll boundary:
-        if (minimo_valor.x < leftBoundary) {
-        	minimo_valor.x = leftBoundary;
-            maximo_valor.x = leftBoundary + domainSpan;
-        } else if (maximo_valor.x > data_chart[3].getX(data_chart[3].size() - 1).floatValue()) {
-        	maximo_valor.x = rightBoundary;
-        	minimo_valor.x = rightBoundary - domainSpan;
-        }
+	   for(int b =  0 ; b < signal.length ; b++)
+	   {
+		 System.out.println("value_:"+signal[b]);  
+	   }
+	   duerme(2000);
+	   }}
+	      	*/
     }
+    
+public void run_data_charge()
+{
 
-    private float spacing(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return FloatMath.sqrt(x * x + y * y);
-    }
+	 new Thread(new Runnable(){
+	        public void run() 
+	        {
+	            // get rid the oldest sample in history:
+	         //   if (chanel_a_HistorySeries.size() > X_RANGE_SIZE) {
+	         /*       chanel_a_HistorySeries.removeFirst();
+	                chanel_b_HistorySeries.removeFirst();
+	                chanel_c_HistorySeries.removeFirst();
+	                chanel_d_HistorySeries.removeFirst();
+	                chanel_e_HistorySeries.removeFirst();
+	                chanel_f_HistorySeries.removeFirst();
+	                chanel_g_HistorySeries.removeFirst();
+	                chanel_h_HistorySeries.removeFirst();
+	                chanel_i_HistorySeries.removeFirst();
+	                chanel_j_HistorySeries.removeFirst();
+	                chanel_k_HistorySeries.removeFirst();
+	                chanel_l_HistorySeries.removeFirst();
+	                chanel_m_HistorySeries.removeFirst();*/
+	         //   }
+        	
+	    	    int increment = 20 ;
+	    	    int resta = 0 ;
+	    		
+	    	   for(int a =0; a < edf_header_chanel.length ; a++)
+	    	   {
+	    		System.out.println(edf_header_chanel[a]);   
+	    		chanel_number[a] = a ;   
+	    	   }   
+	    	   
+	    	   size_signal = my_edf_data.get_size_data();
+	    	   System.out.println("tamano senal"+size_signal);   
+	    	   for(int i = 0 ; i < size_signal ; i+=increment)
+	    	   {	   
+	    	   resta = size_signal - size_limit;
+	    	   if(resta < 20)
+	    	   {
+	    		increment = resta;   
+	    	   }
+	    	   size_limit += increment; 
+	    	   signal_a =  my_edf_data.my_signal_part(i, chanel_number[2], size_limit);   
+	    	   signal_b =  my_edf_data.my_signal_part(i, chanel_number[3], size_limit);   
+	    	   signal_c =  my_edf_data.my_signal_part(i, chanel_number[4], size_limit);   
+	    	   signal_d =  my_edf_data.my_signal_part(i, chanel_number[5], size_limit);   
+	    	   signal_e =  my_edf_data.my_signal_part(i, chanel_number[6], size_limit);   
+	    	   signal_f =  my_edf_data.my_signal_part(i, chanel_number[7], size_limit);   
+	    	   signal_g =  my_edf_data.my_signal_part(i, chanel_number[8], size_limit);   
+	    	   signal_h =  my_edf_data.my_signal_part(i, chanel_number[9], size_limit);   
+	    	   signal_i =  my_edf_data.my_signal_part(i, chanel_number[10], size_limit);   
+	    	   signal_j =  my_edf_data.my_signal_part(i, chanel_number[11], size_limit);  
+	    	   signal_k =  my_edf_data.my_signal_part(i, chanel_number[12], size_limit);   
+	    	   signal_l =  my_edf_data.my_signal_part(i, chanel_number[13], size_limit);   
+	    	   signal_m =  my_edf_data.my_signal_part(i, chanel_number[14], size_limit);   
+	    	   
+	    	   System.out.println("el limite de tamaño es_:"+size_limit);	 
+	    	   System.out.println("el incremento es_:"+increment);
 
+	    	   for(int b =  0 ; b < signal_a.length ; b++)
+	    	   {
+	    		   if (chanel_a_HistorySeries.size() > X_RANGE_SIZE) {
+	    		    chanel_a_HistorySeries.removeFirst();
+	                chanel_b_HistorySeries.removeFirst();
+	                chanel_c_HistorySeries.removeFirst();
+	                chanel_d_HistorySeries.removeFirst();
+	                chanel_e_HistorySeries.removeFirst();
+	                chanel_f_HistorySeries.removeFirst();
+	                chanel_g_HistorySeries.removeFirst();
+	                chanel_h_HistorySeries.removeFirst();
+	                chanel_i_HistorySeries.removeFirst();
+	                chanel_j_HistorySeries.removeFirst();
+	                chanel_k_HistorySeries.removeFirst();
+	                chanel_l_HistorySeries.removeFirst();
+	                chanel_m_HistorySeries.removeFirst();}
+	    		   
+		            chanel_a_HistorySeries.addLast(null, signal_a[b]);
+		            chanel_b_HistorySeries.addLast(null, signal_b[b]);
+		            chanel_c_HistorySeries.addLast(null, signal_c[b]);
+		            chanel_d_HistorySeries.addLast(null, signal_d[b]);
+		            chanel_e_HistorySeries.addLast(null, signal_e[b]);
+		            chanel_f_HistorySeries.addLast(null, signal_f[b]);
+		            chanel_g_HistorySeries.addLast(null, signal_g[b]);
+		            chanel_h_HistorySeries.addLast(null, signal_h[b]);
+		            chanel_i_HistorySeries.addLast(null, signal_i[b]);
+		            chanel_j_HistorySeries.addLast(null, signal_j[b]);
+		            chanel_k_HistorySeries.addLast(null, signal_k[b]);
+		            chanel_l_HistorySeries.addLast(null, signal_l[b]);
+		            chanel_m_HistorySeries.addLast(null, signal_m[b]);		    		   
+		    		  	    	   		   
+	    		 //System.out.println("value_:"+signal[b]);  
+	    	   }
+	    	   duerme(1000);
+	    	   }
+	        	
+	        	
+	        	
+	        }
+	    }).start();	
+	
+}    
+    
+   
 }

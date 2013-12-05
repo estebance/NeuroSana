@@ -29,6 +29,7 @@ public class EDFSignal
 	protected Double[] unitsInDigit;
 	protected short[][] digitalValues;
 	protected double[][] valuesInUnits;
+	protected int[] range_digital_units_values;
 
 	public Double[] getUnitsInDigit()
 	{
@@ -44,4 +45,10 @@ public class EDFSignal
 	{
 		return valuesInUnits;
 	}
+
+	public int[] range_digital_units_values()
+	{
+		return range_digital_units_values;
+	}	
+
 }

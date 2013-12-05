@@ -126,15 +126,18 @@ public class EDFParser
 
 			signal.unitsInDigit = new Double[header.numberOfChannels];
 			for (int i = 0; i < signal.unitsInDigit.length; i++)
-				signal.unitsInDigit[i] = (header.maxInUnits[i] - header.minInUnits[i])
-						/ (header.digitalMax[i] - header.digitalMin[i]);
-
+			{
+				signal.unitsInDigit[i] = (header.maxInUnits[i] - header.minInUnits[i]) / (header.digitalMax[i] - header.digitalMin[i]);
+			}
 			signal.digitalValues = new short[header.numberOfChannels][];
 			signal.valuesInUnits = new double[header.numberOfChannels][];
+			
 			for (int i = 0; i < header.numberOfChannels; i++)
 			{
-				signal.digitalValues[i] = new short[header.numberOfRecords * header.numberOfSamples[i]];
-				signal.valuesInUnits[i] = new double[header.numberOfRecords * header.numberOfSamples[i]];
+				int number = header.numberOfRecords * header.numberOfSamples[i];
+				signal.digitalValues[i] = new short[number];
+				signal.valuesInUnits[i] = new double[number];
+		
 			}
 
 			int samplesPerRecord = 0;
@@ -165,7 +168,7 @@ public class EDFParser
 
 			result.signal = signal;
 			return result;
-		} catch (IOException e)
+		} catch (Exception e)
 		{
 			throw new EDFParserException(e);
 		}
@@ -293,6 +296,15 @@ public class EDFParser
 		{
 			throw new EDFParserException(e);
 		}
+	}
+	
+	public static void duerme(int time)
+	{
+     try {
+	   Thread.sleep(time);
+         } catch (InterruptedException e) {
+	     e.printStackTrace();
+         }	
 	}
 
 }
