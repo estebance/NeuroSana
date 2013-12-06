@@ -168,29 +168,7 @@ public class NeuroActivity extends Activity
 	{
 	Intent view_file = new Intent(this, ChartActivity.class);
 	view_file.putExtra("data_direction", result_file_uri);
-	startActivity(view_file);
-		
-	/*read edf*/
-	/*ReadEdf a = new ReadEdf();	
-	a.set_uri_file(result_file_uri);
-	a.init_parser_file();
-	String[] t  = a.get_label_chanel();
-	for(int b=0 ; b<t.length ; b++)
-	{
-	System.out.println("hola"+t[b]);	
-	}
-	double[][] ahah = a.get_signal();
-
-	for(int f=0 ; f<t.length ; f++)
-	{
-     for(int i = 0 ; i < ahah[f].length; i++)
-     {	 
-      //Log.d("value","value"+ahah[f][i]);
-     }
-    
-	}
-	*/
-		
+	startActivity(view_file);		
 	}
 	
 	

@@ -35,7 +35,7 @@ public void  init_parser_file()
 {	
   try 
     {
-	  data = new BufferedInputStream(new FileInputStream(new File("storage/sdcard0/EEGsaved/35MIN.edf")));
+	  data = new BufferedInputStream(new FileInputStream(new File(""+direction_data+"")));
       parser_data_edf = EDFParser.parseEDF(data);
     } 
   catch (Exception e) 
@@ -57,13 +57,13 @@ public String[] get_label_chanel()
 }
 
 
-public double[] my_signal_part(int for_init , int chanel , int limit)
+public double[] my_signal_part(int init_capture , int chanel , int limit)
 {
-System.out.println("for inicia en_:"+for_init);	
+System.out.println("for inicia en_:"+init_capture);	
 System.out.println("for limite en_:"+limit);	
-double[] data_from_chanel = new double[limit-for_init];
+double[] data_from_chanel = new double[limit-init_capture];
 int position = 0 ; 
-for(int range = for_init ; range < limit  ; range++)
+for(int range = init_capture ; range < limit  ; range++)
 {
  data_from_chanel[position] = data_values[chanel][range];
  position++; 
