@@ -38,6 +38,7 @@ public static final int ERROR_DATA = 4;
 public static final int BUSSY = 5;
 public static  final int CONNECTION_CLOSE= 6;
 public static final int FREE = 7;
+public static final int BUSSY_FILE = 8;
 
 
 
@@ -236,6 +237,7 @@ public class Management_Connection extends Thread
     private static final int COMANDO_CANCELADO=6;
     private static final int COMANDO_INICIADO=7;
     private static final int COMANDO_FINALIZADO=8;	
+    private static final int COMANDO_FALLA = 10;
     
     public Management_Connection(BluetoothSocket socket) 
     {    	
@@ -360,7 +362,7 @@ public class Management_Connection extends Thread
        int bytes_file , respuesta_servidor;;
         try 
         {
-        	set_My_State(BUSSY);
+        	set_My_State(BUSSY_FILE);
 			bytes_file_name = incoming_data.read(buffer_file_name);
 		    read_name = new String(buffer_file_name, 0, bytes_file_name);
 			

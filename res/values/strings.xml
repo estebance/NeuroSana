@@ -25,6 +25,7 @@
     <string name="go_out">Salir</string>
     <string name="bussy">Ocupado</string>
     <string name="error_connection">Error Conexion</string>
+    <string name="error_acquiring">Error Adquiriendo Datos</string>
     <string name="connected">Conectado</string>
     <string name="connecting">Conectando</string>
     <string name="free">Sin Estado</string>

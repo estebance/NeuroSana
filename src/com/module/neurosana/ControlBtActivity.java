@@ -41,6 +41,7 @@ public static final int ERROR_DATA = 4;
 public static final int BUSSY = 5; 
 public static  final int CONNECTION_CLOSE= 6;
 public static final int FREE = 7;
+public static final int BUSSY_FILE = 8;
 
 /*posibles ordenes que lleguen del servidor*/
 
@@ -52,6 +53,7 @@ private static final int COMANDO_TERMINADO=5;
 private static final int COMANDO_CANCELADO=6;
 private static final int COMANDO_INICIADO=7;
 private static final int COMANDO_FINALIZADO=8;
+private static final int COMANDO_FALLA = 10 ;
 /*Elementos de la vista*/
 
 TextView state_connection_view;
@@ -249,6 +251,10 @@ Button capture , cancel , save , exit ;
 	    Toast.makeText(this, R.string.finished_acquiring, Toast.LENGTH_LONG).show(); 
   break;  
   
+  case COMANDO_FALLA: 
+	  Toast.makeText(this, R.string.error_acquiring, Toast.LENGTH_LONG).show(); 
+  break;  
+  
   
   }   
     
@@ -289,7 +295,16 @@ Button capture , cancel , save , exit ;
   case BUSSY:
 	  state_connection_view.setText(R.string.bussy);
 	  disable_buttons(1);
-  break;  	  
+	  enable_cancel();
+	  
+  break;  
+  
+  
+  case BUSSY_FILE:
+	  state_connection_view.setText(R.string.bussy);
+	  disable_buttons(1);
+  break;	  
+  
   } 
 }
 //  
@@ -314,6 +329,11 @@ capture.setEnabled(true);
 save.setEnabled(true);
 cancel.setEnabled(true);	
 }
+}
+
+public void enable_cancel()
+{
+cancel.setEnabled(true);	
 }
 
 }
