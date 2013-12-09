@@ -290,9 +290,16 @@ public class Management_Connection extends Thread
         	sleep_capture_data();	
         	try
         	{
-            set_My_State(STATE_CONNECTED);
+        	while(true)
+            {			
             respuesta = incoming_data.read();
-       	    send_to_ui(respuesta);
+            if(respuesta == 8)
+            {
+            send_to_ui(respuesta);
+            break;
+            }
+            }
+            set_My_State(STATE_CONNECTED);            
         	}
         	catch(Exception e)
         	{
