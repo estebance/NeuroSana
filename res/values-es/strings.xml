@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NeuroSana</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="action_update">Actualizar</string>
+    <string name="search_file">Buscar Archivo</string>
+    <string name="capture_data">Capturar Datos</string>
+    <string name="view_file">Ver EEG</string>
+    <string name="name_file">Nombre del Archivo</string>
+    <string name="no_file_upload">No se ha cargado un archivo</string>
+    <string name="title_activity_list_files">ListFilesActivity</string>
+    <string name="sdcard_availability">Sdcard no disponible</string>
+    <string name="folder_availability">No has capturado ningun archivo</string>
+    <string name="title_activity_bt_list">BtListActivity</string>
+    <string name="title_activity_control_bt">ControlBtActivity</string>
+    <string name="not_connected">No Tienes Conexion</string>
+    <string name="bluetooth_turn_off">El BLUETOOTH no fue encendido</string>
+    <string name="bluetooth_availability">No cuenta con BLUETOOTH</string>
+    <string name="scan_turn_off">No estas escaneando dispositivos</string>
+    <string name="directory_error">Imposible escribir o leer sdCard</string>
+    <string name="capture_eeg">Capturar EEG</string>
+    <string name="cancel_eeg">Cancelar EEG</string>
+    <string name="verify_eeg">Verificar EEG</string>
+    <string name="send_data">Guardar EEG</string>
+    <string name="go_out">Salir</string>
+    <string name="bussy">Ocupado</string>
+    <string name="error_connection">Error Conexion</string>
+    <string name="error_acquiring">Error Adquiriendo Datos</string>
+    <string name="error_verify">Dispositivo Mal Ubicado</string>
+    <string name="is_verify">Dispositivo Listo para Capturar Datos</string>
+    <string name="connected">Conectado</string>
+    <string name="connecting">Conectando</string>
+    <string name="free">Sin Estado</string>
+    <string name="cancel_acquiring">Cancelada la adquisicion de datos</string>
+    <string name="finished_acquiring">Terminada la adquisicion de datos</string>
+    <string name="init_acquiring">Iniciada la adquisicion de datos</string>
+    <string name="title_activity_chart">ChartActivity</string>
+
+</resources>

@@ -11,32 +11,37 @@ import com.utilities.edf.EDFParserResult;
 public class ReadEdf 
 {
 
-	BufferedInputStream data = null;
+	BufferedInputStream data_source = null;
 	EDFParserResult parser_data_edf = null ;
 	String direction_data = null; 
 	double[][] data_values;
 	int size_data; 
 
+
 	
-public ReadEdf(){}
+public ReadEdf()
+{
+}
 
 public int get_size_data()
 {
 return size_data;	
 }
 
-	
+
+
 public void set_uri_file(String direction_data)
 {
  this.direction_data = direction_data;	
 }	
 
+
 public void  init_parser_file()
 {	
   try 
     {
-	  data = new BufferedInputStream(new FileInputStream(new File(""+direction_data+"")));
-      parser_data_edf = EDFParser.parseEDF(data);
+	  data_source = new BufferedInputStream(new FileInputStream(new File(""+direction_data+"")));
+      parser_data_edf = EDFParser.parseEDF(data_source);
     } 
   catch (Exception e) 
   {

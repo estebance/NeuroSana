@@ -34,13 +34,11 @@ public static final int NO_STATE = 0;
 public static final int STATE_CONNECTING = 1; 
 public static final int STATE_CONNECTED = 2;  
 public static final int ERROR_CONNECTION = 3;
-public static final int ERROR_DATA = 4;
 public static final int BUSSY = 5;
-public static  final int CONNECTION_CLOSE= 6;
+public static final int CONNECTION_CLOSE= 6;
 public static final int FREE = 7;
 public static final int BUSSY_FILE = 8;
-
-
+public static final int BUSSY_VERIFICAR = 9 ; 
 
 public ConnectorBtThread( Handler handler )
 {
@@ -86,7 +84,8 @@ public synchronized void connected_with_server (BluetoothSocket socket)
 }
 
 
-public synchronized void stop() {
+public synchronized void stop() 
+{
  
     if (my_Connect != null) {
         my_Connect.cancel();
@@ -101,25 +100,22 @@ public synchronized void stop() {
     set_My_State(NO_STATE);
 }
 	
-    public void setinfo (int data)
-    { 
-    	   Management_Connection send;
-          /* sincronizando para poder ser empleado */
-          synchronized (this) 
-          {
-           if (myState != STATE_CONNECTED)
-           { 
-           return;
-           }
-           else
-           {
-           send = my_Connected;
-           send.write(data);
-           }
-          }
-          
-
-    }
+public void setinfo (int data)
+{ 
+   Management_Connection send;  /* sincronizando para poder ser empleado */
+   synchronized (this) 
+   {
+     if (myState != STATE_CONNECTED)
+     { 
+     return;
+     }
+     else
+     {
+     send = my_Connected;
+     send.write(data);
+     }
+   }
+}
     
     
 public void send_state_to_ui(int orden)
@@ -142,33 +138,30 @@ public class Connect_BtThread extends Thread
 	
   private final BluetoothSocket socket_information_connect;	
   private final UUID MY_UUID = UUID.fromString("0000-11010000-1000-8000-00805F9B34FD");
-  public Connect_BtThread (BluetoothDevice device) 
-    {  
-	  BluetoothSocket socket_connect = null ;
-	  
-        try 
-        {
-        /* en bt un socket cumple el mismo principio de los socket tcp/ip*/
-        socket_connect = device.createRfcommSocketToServiceRecord(MY_UUID); 
-        System.out.println("Conectando: " + MY_UUID);
-        	
-        }
-        catch(IOException e)
-        {
-        System.out.println("no es posible crear el socket" + e);
-        e.printStackTrace();
-     	set_My_State(ERROR_CONNECTION);
-        }
-        
-        socket_information_connect = socket_connect;
-
+ 
+public Connect_BtThread (BluetoothDevice device) 
+{  
+	BluetoothSocket socket_connect = null ;
+    try 
+    {
+      socket_connect = device.createRfcommSocketToServiceRecord(MY_UUID); /* en bt un socket cumple el mismo principio de los socket tcp/ip*/
+      System.out.println("Conectando: " + MY_UUID);
     }
+    catch(IOException e)
+    {
+    System.out.println("no es posible crear el socket" + e);
+    e.printStackTrace();
+    set_My_State(ERROR_CONNECTION);
+    }
+        
+    socket_information_connect = socket_connect;
+}
     
     /*cuando corre el hilo despues del constructor hemos logrado conectarnos y estamos listos para transmitir informacion*/
     
      @Override
-	public void run()
-     {      	                          
+public void run()
+{      	                          
         /*iniciado el socket*/
          try 
          {
@@ -196,13 +189,11 @@ public class Connect_BtThread extends Thread
          }
          
          }                
-    
-        
-    }
+}
      
 
-    public void cancel() 
-    {
+public void cancel() 
+{
         try 
         {
         socket_information_connect.close();
@@ -213,7 +204,7 @@ public class Connect_BtThread extends Thread
         System.out.println("problema al cerrar el socket");
      	set_My_State(ERROR_CONNECTION);
         }
-    }
+}
      
      
 
@@ -237,7 +228,10 @@ public class Management_Connection extends Thread
     private static final int COMANDO_CANCELADO=6;
     private static final int COMANDO_INICIADO=7;
     private static final int COMANDO_FINALIZADO=8;	
-    private static final int COMANDO_FALLA = 10;
+	private static final int COMANDO_VERIFICAR = 11;
+	private static final int COMANDO_VERIFICADO = 12; 
+	private static final int COMANDO_ERROR = -1;
+	private static final int COMANDO_ERROR_VERIFICAR = -2 ;
     
     public Management_Connection(BluetoothSocket socket) 
     {    	
@@ -255,9 +249,10 @@ public class Management_Connection extends Thread
         e.printStackTrace();
      	set_My_State(ERROR_CONNECTION);
         }
-         socket_information=socket; 
-         incoming_data = temporal_input;
-         outgoing_data = temporal_output;
+         
+        socket_information=socket; 
+        incoming_data = temporal_input;
+        outgoing_data = temporal_output;
     }
     
     /*cuando corre el hilo despues del constructor estamos listos para transmitir informacion*/
@@ -266,8 +261,7 @@ public class Management_Connection extends Thread
 	public void run()
      {   
     	 int orden = 0;
-    	 int respuesta = 0; 
-    	
+    	 int respuesta = 0;    	
     	 System.out.println("enviando y recibiendo streams, gestionando la conexion...");                            
               
          while (true) 
@@ -284,34 +278,76 @@ public class Management_Connection extends Thread
           receivefile();           
           }
           
+          if(orden == COMANDO_VERIFICAR)
+          {
+        	set_My_State(BUSSY_VERIFICAR);           
+        	try
+            {
+            	while(true)
+                {			
+                respuesta = incoming_data.read();
+                if(respuesta == COMANDO_VERIFICADO)
+                {
+                send_to_ui(respuesta);               
+                break;
+                }
+                if(respuesta == COMANDO_ERROR_VERIFICAR)
+                {
+                send_to_ui(respuesta);
+                break;
+                }
+                
+
+                set_My_State(STATE_CONNECTED); 
+                
+                } // fin del while 
+            	                                     
+            }
+              
+            catch(Exception e)
+            {
+              set_My_State(NO_STATE);	
+              e.printStackTrace();	
+            }
+        	
+        	
+          }	  
+                    
           if(orden == COMANDO_INICIADO)
           {
         	set_My_State(BUSSY);  
-        	sleep_capture_data();	
-        	try
-        	{
+          try
+          {
         	while(true)
             {			
             respuesta = incoming_data.read();
-            if(respuesta == 8)
+            if(respuesta == COMANDO_FINALIZADO)
             {
             send_to_ui(respuesta);
             break;
             }
+            if(respuesta == COMANDO_ERROR)
+            {
+            send_to_ui(respuesta);
+            break;
             }
+            
+            } // fin del while 
+        	
             set_My_State(STATE_CONNECTED);            
-        	}
-        	catch(Exception e)
-        	{
-        	set_My_State(NO_STATE);	
-        	e.printStackTrace();	
-        	}
           }
           
-          else
+          catch(Exception e)
           {
-           send_to_ui(orden);
+        	set_My_State(NO_STATE);	
+        	e.printStackTrace();	
           }
+         }
+          
+         else
+         {
+         send_to_ui(orden);
+         }
          
         }  
          
@@ -400,10 +436,10 @@ public class Management_Connection extends Thread
 	    	 file_stream.close();
 	    	 /*esperar por la respuesta del servidor ante la orden*/
 	    	 
-	    	   System.out.println("esperando respuesta");
-			   respuesta_servidor = incoming_data.read();
-		       send_to_ui(respuesta_servidor);
-		       set_My_State(STATE_CONNECTED );
+	    	 System.out.println("esperando respuesta");
+			 respuesta_servidor = incoming_data.read();
+		     send_to_ui(respuesta_servidor);
+		     set_My_State(STATE_CONNECTED );
 			   
 		    }		
         } 
@@ -434,19 +470,7 @@ public String get_namefile()
 }
 
 
-public void  sleep_capture_data()
-{
-	 try
-     {
-     Thread.sleep(10000);	
-     }
-     catch(Exception e)
-     {
-     e.printStackTrace();	
-     }        
-	 
-     
-}
+
 
 public void send_to_ui(int orden)
 {
