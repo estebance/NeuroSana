@@ -46,10 +46,10 @@ public class ChartActivity extends Activity
  int[] chanel_number = new int[14];
  int size_signal;
  int size_limit = 0;
+ int break_for = 0; 
  double[] signal_a , signal_b , signal_c , signal_d , signal_e , signal_f , signal_g , signal_h , signal_i , signal_j , signal_k , signal_l , signal_m , signal_n; 
 	
-
- 
+ boolean stop = false; 
  
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -142,8 +142,8 @@ public class ChartActivity extends Activity
 		my_edf_data.init_parser_file();
 		edf_header_chanel = my_edf_data.get_label_chanel();
 		my_edf_data.get_signal();
-		run_data_charge();
-		
+		run_capture();
+			
 	}
 	
 	
@@ -177,106 +177,136 @@ public class ChartActivity extends Activity
     }
 
     @Override
-    public void onPause() {
-        redrawer.pause();
-        super.onPause();
+    public void onPause() 
+    {    
+    super.onPause();
+    redrawer.pause();
     }
 
     @Override
-    public void onDestroy() {
-        redrawer.finish();
+    public void onDestroy() 
+    {
         super.onDestroy();
+        stop = true; 
+    	redrawer.finish();
     }
     
-public void run_data_charge()
+
+
+@Override
+public void onBackPressed() 
 {
-	 new Thread(new Runnable(){
-	        public void run() 
-	        {
+this.finish();
+stop = true;	
+redrawer.finish();
+System.out.println("pulsadoBack");
+}
+  
 
-        	    int increment = 20 ;
-	    	    int resta = 0 ;
-	    		
-	    	   for(int a =0; a < edf_header_chanel.length ; a++)
-	    	   {
-	    		System.out.println(edf_header_chanel[a]);   
-	    		chanel_number[a] = a ;   
-	    	   }   
-	    	   
-	    	   size_signal = my_edf_data.get_size_data();
-	    	   System.out.println("tamano senal"+size_signal);   
-	    	   
-	    	   for(int i = 0 ; i < size_signal ; i+=increment)
-	    	   {	   
-	    	   resta = size_signal - size_limit;
-	    	   // si los datos que quedan son menores al incremento establecido , set al incremento con este valor 
-	    	   if(resta < 20)
-	    	   {
-	    		increment = resta;   
-	    	   }
-	    	   size_limit += increment; 
-	    	   signal_a =  my_edf_data.my_signal_part(i, chanel_number[0], size_limit);   
-	    	   signal_b =  my_edf_data.my_signal_part(i, chanel_number[1], size_limit);   
-	    	   signal_c =  my_edf_data.my_signal_part(i, chanel_number[2], size_limit);   
-	    	   signal_d =  my_edf_data.my_signal_part(i, chanel_number[3], size_limit);   
-	    	   signal_e =  my_edf_data.my_signal_part(i, chanel_number[4], size_limit);   
-	    	   signal_f =  my_edf_data.my_signal_part(i, chanel_number[5], size_limit);   
-	    	   signal_g =  my_edf_data.my_signal_part(i, chanel_number[6], size_limit);   
-	    	   signal_h =  my_edf_data.my_signal_part(i, chanel_number[7], size_limit);   
-	    	   signal_i =  my_edf_data.my_signal_part(i, chanel_number[8], size_limit);   
-	    	   signal_j =  my_edf_data.my_signal_part(i, chanel_number[9], size_limit);  
-	    	   signal_k =  my_edf_data.my_signal_part(i, chanel_number[10], size_limit);   
-	    	   signal_l =  my_edf_data.my_signal_part(i, chanel_number[11], size_limit);   
-	    	   signal_m =  my_edf_data.my_signal_part(i, chanel_number[12], size_limit);
-	    	   signal_n = my_edf_data.my_signal_part( i, chanel_number[13], size_limit);
-	    	   
-	    	   System.out.println("el limite de tamaño es_:"+size_limit);	 
-	    	   System.out.println("el incremento es_:"+increment);
+public void run_capture()
+{
+  new Thread(new Runnable() 
+  {
 
-	    	   for(int b =  0 ; b < signal_a.length ; b++)
-	    	   {
-	    		   if (chanel_a_HistorySeries.size() > X_RANGE_SIZE) 
-	    		   {
-	    		    chanel_a_HistorySeries.removeFirst();
-	                chanel_b_HistorySeries.removeFirst();
-	                chanel_c_HistorySeries.removeFirst();
-	                chanel_d_HistorySeries.removeFirst();
-	                chanel_e_HistorySeries.removeFirst();
-	                chanel_f_HistorySeries.removeFirst();
-	                chanel_g_HistorySeries.removeFirst();
-	                chanel_h_HistorySeries.removeFirst();
-	                chanel_i_HistorySeries.removeFirst();
-	                chanel_j_HistorySeries.removeFirst();
-	                chanel_k_HistorySeries.removeFirst();
-	                chanel_l_HistorySeries.removeFirst();
-	                chanel_m_HistorySeries.removeFirst();
-	                chanel_n_HistorySeries.removeFirst(); 
-	    		   }
-	    		   
-		            chanel_a_HistorySeries.addLast(null, signal_a[b]);
-		            chanel_b_HistorySeries.addLast(null, signal_b[b]);
-		            chanel_c_HistorySeries.addLast(null, signal_c[b]);
-		            chanel_d_HistorySeries.addLast(null, signal_d[b]);
-		            chanel_e_HistorySeries.addLast(null, signal_e[b]);
-		            chanel_f_HistorySeries.addLast(null, signal_f[b]);
-		            chanel_g_HistorySeries.addLast(null, signal_g[b]);
-		            chanel_h_HistorySeries.addLast(null, signal_h[b]);
-		            chanel_i_HistorySeries.addLast(null, signal_i[b]);
-		            chanel_j_HistorySeries.addLast(null, signal_j[b]);
-		            chanel_k_HistorySeries.addLast(null, signal_k[b]-500); // le resto 500 para que no salga junto a la otra 
-		            chanel_l_HistorySeries.addLast(null, signal_l[b]);
-		            chanel_m_HistorySeries.addLast(null, signal_m[b]);	
-		            chanel_n_HistorySeries.addLast(null, signal_n[b]);		    		  	    	   		   
-	    	       }
-	    	      duerme(1000);
-	    	     }
-	        	
-	        	
-	        	
-	        }
-	    }).start();	
-	
-}    
+  int increment = 20 ;
+  int resta = 0 ;	
+    	
+   public void run()
+   {
     
+   while(true)
+   {  
+	   
+   if(stop == true)
+   { 
+    break;  
+   }   
+	   
+   for(int a =0; a < edf_header_chanel.length ; a++)
+   {
+	System.out.println(edf_header_chanel[a]);   
+	chanel_number[a] = a ;   
+   }   
    
+   size_signal = my_edf_data.get_size_data();
+   System.out.println("tamano senal"+size_signal);   
+   
+   for(int i = 0 ; i < size_signal ; i+=increment)
+   {
+	   
+   if(stop == true)
+   {
+    break;  
+   }	   
+	   
+   resta = size_signal - size_limit;
+   // si los datos que quedan son menores al incremento establecido , set al incremento con este valor 
+   if(resta < 20)
+   {
+	increment = resta;   
+   }
+   size_limit += increment; 
+   signal_a =  my_edf_data.my_signal_part(i, chanel_number[0], size_limit);   
+   signal_b =  my_edf_data.my_signal_part(i, chanel_number[1], size_limit);   
+   signal_c =  my_edf_data.my_signal_part(i, chanel_number[2], size_limit);   
+   signal_d =  my_edf_data.my_signal_part(i, chanel_number[3], size_limit);   
+   signal_e =  my_edf_data.my_signal_part(i, chanel_number[4], size_limit);   
+   signal_f =  my_edf_data.my_signal_part(i, chanel_number[5], size_limit);   
+   signal_g =  my_edf_data.my_signal_part(i, chanel_number[6], size_limit);   
+   signal_h =  my_edf_data.my_signal_part(i, chanel_number[7], size_limit);   
+   signal_i =  my_edf_data.my_signal_part(i, chanel_number[8], size_limit);   
+   signal_j =  my_edf_data.my_signal_part(i, chanel_number[9], size_limit);  
+   signal_k =  my_edf_data.my_signal_part(i, chanel_number[10], size_limit);   
+   signal_l =  my_edf_data.my_signal_part(i, chanel_number[11], size_limit);   
+   signal_m =  my_edf_data.my_signal_part(i, chanel_number[12], size_limit);
+   signal_n = my_edf_data.my_signal_part( i, chanel_number[13], size_limit);
+   
+   System.out.println("el limite de tamaño es_:"+size_limit);	 
+   System.out.println("el incremento es_:"+increment);
+
+   for(int b =  0 ; b < signal_a.length ; b++)
+   {
+	   if (chanel_a_HistorySeries.size() > X_RANGE_SIZE) 
+	   {
+	    chanel_a_HistorySeries.removeFirst();
+        chanel_b_HistorySeries.removeFirst();
+        chanel_c_HistorySeries.removeFirst();
+        chanel_d_HistorySeries.removeFirst();
+        chanel_e_HistorySeries.removeFirst();
+        chanel_f_HistorySeries.removeFirst();
+        chanel_g_HistorySeries.removeFirst();
+        chanel_h_HistorySeries.removeFirst();
+        chanel_i_HistorySeries.removeFirst();
+        chanel_j_HistorySeries.removeFirst();
+        chanel_k_HistorySeries.removeFirst();
+        chanel_l_HistorySeries.removeFirst();
+        chanel_m_HistorySeries.removeFirst();
+        chanel_n_HistorySeries.removeFirst(); 
+	   }
+	   
+        chanel_a_HistorySeries.addLast(null, signal_a[b]);
+        chanel_b_HistorySeries.addLast(null, signal_b[b]);
+        chanel_c_HistorySeries.addLast(null, signal_c[b]);
+        chanel_d_HistorySeries.addLast(null, signal_d[b]);
+        chanel_e_HistorySeries.addLast(null, signal_e[b]);
+        chanel_f_HistorySeries.addLast(null, signal_f[b]);
+        chanel_g_HistorySeries.addLast(null, signal_g[b]);
+        chanel_h_HistorySeries.addLast(null, signal_h[b]);
+        chanel_i_HistorySeries.addLast(null, signal_i[b]);
+        chanel_j_HistorySeries.addLast(null, signal_j[b]);
+        chanel_k_HistorySeries.addLast(null, signal_k[b]-500); // le resto 500 para que no salga junto a la otra 
+        chanel_l_HistorySeries.addLast(null, signal_l[b]);
+        chanel_m_HistorySeries.addLast(null, signal_m[b]);	
+        chanel_n_HistorySeries.addLast(null, signal_n[b]);		    		  	    	   		   
+       }
+      duerme(1000);     
+   }	
+
+
+
+ }
+ }
+ }).start();
+ 
+}   
 }

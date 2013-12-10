@@ -1,3 +1,4 @@
 <resources>
         <color name="gray_background">#8C8989</color>
+        <color name="text_color">#FAFAFA</color>
 </resources>

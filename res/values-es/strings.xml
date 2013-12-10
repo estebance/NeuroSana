@@ -9,11 +9,11 @@
     <string name="view_file">Ver EEG</string>
     <string name="name_file">Nombre del Archivo</string>
     <string name="no_file_upload">No se ha cargado un archivo</string>
-    <string name="title_activity_list_files">ListFilesActivity</string>
+    <string name="title_activity_list_files">Mis Archivos</string>
     <string name="sdcard_availability">Sdcard no disponible</string>
     <string name="folder_availability">No has capturado ningun archivo</string>
-    <string name="title_activity_bt_list">BtListActivity</string>
-    <string name="title_activity_control_bt">ControlBtActivity</string>
+    <string name="title_activity_bt_list">Dispositivos Bluetooth</string>
+    <string name="title_activity_control_bt">Control Emotiv</string>
     <string name="not_connected">No Tienes Conexion</string>
     <string name="bluetooth_turn_off">El BLUETOOTH no fue encendido</string>
     <string name="bluetooth_availability">No cuenta con BLUETOOTH</string>
@@ -35,6 +35,6 @@
     <string name="cancel_acquiring">Cancelada la adquisicion de datos</string>
     <string name="finished_acquiring">Terminada la adquisicion de datos</string>
     <string name="init_acquiring">Iniciada la adquisicion de datos</string>
-    <string name="title_activity_chart">ChartActivity</string>
+    <string name="title_activity_chart">Grafico EEG</string>
 
 </resources>

@@ -17,7 +17,8 @@
         android:layout_alignLeft="@+id/button2neuro_activity"
         android:layout_centerVertical="true"
         android:onClick="search_file"
-        android:text="@string/search_file" />
+        android:text="@string/search_file"
+        android:textColor="@color/text_color" />
 
     <Button
         android:id="@+id/button2neuro_activity"
@@ -27,7 +28,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:onClick="capture_data"
-        android:text="@string/capture_data" />
+        android:text="@string/capture_data"
+        android:textColor="@color/text_color" />
 
     <Button
         android:id="@+id/button3neuro_activity"
@@ -38,16 +40,18 @@
         android:layout_below="@+id/button2neuro_activity"
         android:layout_marginTop="35dp"
         android:onClick="view_eeg"
-        android:text="@string/view_file" />
+        android:text="@string/view_file"
+        android:textColor="@color/text_color" />
 
     <TextView
         android:id="@+id/textView1neuro_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="80dp"
-        android:text="@string/name_file" />
+        android:text="@string/name_file"
+        android:textColor="@color/text_color" />
 
     <TextView
         android:id="@+id/textView2neuro_activity"
@@ -56,6 +60,7 @@
         android:layout_below="@+id/textView1neuro_activity"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:text="@string/no_file_upload" />
+        android:text="@string/no_file_upload"
+        android:textColor="@color/text_color" />
 
 </RelativeLayout>

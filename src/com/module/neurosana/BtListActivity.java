@@ -53,7 +53,7 @@ public class BtListActivity extends Activity
 	    /*escanemos los dispositivos*/
 	    threadscan();
 		/*encontramos un dispositivo bluetooth?*/
-	    
+	     
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		this.registerReceiver(Receiver_Devices, filter);
         
@@ -104,10 +104,13 @@ public class BtListActivity extends Activity
 	
     public void update()
     {
+    if(connector.isDiscovering() == false)	
+    {	
     bt_list_devices.clear();
     devices_name.clear();
     devices_dir.clear();
     threadscan();	
+    }
     }	
 
 
@@ -137,7 +140,7 @@ public class BtListActivity extends Activity
 /*hilo para iniciar busqueda de dispositivos bluetooth*/
 private void threadscan()
 {
-	  
+		
 	Thread t = new Thread()
 	{
 		@Override
@@ -158,7 +161,8 @@ private void threadscan()
 	};
 	
  t.start();
-}
+	}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 

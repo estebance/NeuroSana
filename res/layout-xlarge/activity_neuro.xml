@@ -18,6 +18,7 @@
         android:layout_marginLeft="50dp"
         android:layout_marginTop="100dp"
         android:text="@string/name_file"
+        android:textColor="@color/text_color"
         android:textSize="@dimen/dimension_text_xlarge" />
 
     <TextView
@@ -28,6 +29,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:text="@string/no_file_upload"
+        android:textColor="@color/text_color"
         android:textSize="@dimen/dimension_text_uri" />
 
     <Button
@@ -37,7 +39,9 @@
         android:layout_alignLeft="@+id/button2neuro_activity"
         android:layout_centerVertical="true"
         android:onClick="search_file"
-        android:text="@string/search_file" />
+        android:text="@string/search_file"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/dimension_text_xlarge" />
 
     <Button
         android:id="@+id/button2neuro_activity"
@@ -47,7 +51,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:onClick="capture_data"
-        android:text="@string/capture_data" />
+        android:text="@string/capture_data"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/dimension_text_xlarge" />
 
     <Button
         android:id="@+id/button3neuro_activity"
@@ -58,6 +64,8 @@
         android:layout_below="@+id/button2neuro_activity"
         android:layout_marginTop="50dp"
         android:onClick="view_eeg"
-        android:text="@string/view_file" />
+        android:text="@string/view_file"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/dimension_text_xlarge" />
 
 </RelativeLayout>

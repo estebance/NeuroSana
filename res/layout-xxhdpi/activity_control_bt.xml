@@ -15,11 +15,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"       
         android:text="@string/free"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/text_color" />
 
     <Button
         android:id="@+id/button4bt_control_activity"
@@ -30,7 +31,8 @@
         android:layout_below="@+id/button2bt_control_activity"
         android:layout_marginTop="40dp"
         android:onClick="command_save"
-        android:text="@string/send_data" />
+        android:text="@string/send_data"
+        android:textColor="@color/text_color" />
 
     <Button
         android:id="@+id/button2bt_control_activity"
@@ -40,18 +42,20 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:onClick="command_cancel"
-        android:text="@string/cancel_eeg" />
+        android:text="@string/cancel_eeg"
+        android:textColor="@color/text_color" />
 
     <Button
         android:id="@+id/button3bt_control_activity"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginBottom="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:onClick="return_to_first_activity"
-        android:text="@string/go_out" />
+        android:text="@string/go_out"
+        android:textColor="@color/text_color" />
 
     <Button
         android:id="@+id/button5bt_control_activity"
@@ -60,7 +64,8 @@
         android:layout_alignLeft="@+id/button1bt_control_activity"
         android:layout_alignRight="@+id/button1bt_control_activity"
         android:layout_below="@+id/textView1bt_control_activity"
-        android:text="@string/verify_eeg" />
+        android:text="@string/verify_eeg"
+        android:textColor="@color/text_color" />
 
     <Button
         android:id="@+id/button1bt_control_activity"
@@ -70,6 +75,7 @@
         android:layout_below="@+id/button5bt_control_activity"
         android:layout_marginTop="40dp"
         android:onClick="command_capture"
-        android:text="@string/capture_eeg" />
+        android:text="@string/capture_eeg"
+        android:textColor="@color/text_color" />
 
 </RelativeLayout>

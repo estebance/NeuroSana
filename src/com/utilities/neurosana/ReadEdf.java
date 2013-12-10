@@ -16,6 +16,7 @@ public class ReadEdf
 	String direction_data = null; 
 	double[][] data_values;
 	int size_data; 
+	
 
 
 	
@@ -78,7 +79,7 @@ return data_from_chanel;
 
 
 
-	
+
 	
 	
 	

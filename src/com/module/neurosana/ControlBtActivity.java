@@ -152,7 +152,7 @@ private int is_verify_sensor = 0 ;
 	        setResult(RESULT_OK, data);			
 		}
 		
-        finish();		
+        this.finish();		
 	}
 	//
 	
@@ -355,6 +355,19 @@ if(is_verify_sensor == 1 )
 public void enable_cancel()
 {
 cancel.setEnabled(true);	
+}
+
+@Override
+public void onBackPressed() 
+{
+connection.setinfo(COMANDO_SALIR);
+if(fileuri != null)
+{
+    Intent data = new Intent();
+    data.putExtra("fileuri", fileuri);
+    setResult(RESULT_OK, data);			
+}
+this.finish();	
 }
 
 }
