@@ -149,7 +149,7 @@ private int is_verify_sensor = 0 ;
 		{
 		    Intent data = new Intent();
 		    data.putExtra("fileuri", fileuri);
-	        setResult(RESULT_OK, data);			
+		    setResult(RESULT_OK, data);			
 		}
 		
         this.finish();		
@@ -367,7 +367,7 @@ if(fileuri != null)
     data.putExtra("fileuri", fileuri);
     setResult(RESULT_OK, data);			
 }
-this.finish();	
+finish();	
 }
 
 }

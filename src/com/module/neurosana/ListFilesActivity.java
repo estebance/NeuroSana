@@ -71,7 +71,7 @@ public class ListFilesActivity extends Activity
         	 
         	    Intent data = new Intent();
         	    data.putExtra("fileuri", fileuri);
-                setResult(RESULT_OK, data);
+        	    setResult(RESULT_OK, data);
                 finish();
 				
 			}

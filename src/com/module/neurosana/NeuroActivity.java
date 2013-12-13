@@ -3,6 +3,7 @@ package com.module.neurosana;
 import com.utilities.neurosana.ManageFiles;
 import com.utilities.neurosana.ReadEdf;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -22,6 +23,7 @@ public class NeuroActivity extends Activity
 	/*Verificar SD  y Directorio  y obtencion datos*/
 	ManageFiles verify_data; 
 	private String result_file_uri = "";
+	private Uri uri;
 	
 	/*mostrar el toast  */
 	Context context;
@@ -84,6 +86,7 @@ public class NeuroActivity extends Activity
 	        if (resultCode == RESULT_OK)
 	        {
 	        	result_file_uri = data.getExtras().getString("fileuri");
+	        	uri = Uri.parse(result_file_uri);
 	        	/*Imprimimos  el file uri en el textview */
 	            file_directory_view.setText(result_file_uri);
 	            /*activamos el boton de visualizar edf*/
@@ -207,5 +210,16 @@ public class NeuroActivity extends Activity
 	
 	return verify;
 	}
+	
+	
+	@Override
+	public void onBackPressed() 
+	{
+	  Intent data = new Intent();
+	  setResult(RESULT_OK, data);
+	  data.setDataAndType(uri, "text/plain");
+	  //data.putExtra("uri", result_file_uri);
+	  finish();
+	}	
 
 }

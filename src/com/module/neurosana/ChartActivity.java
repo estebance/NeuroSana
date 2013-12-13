@@ -103,21 +103,21 @@ public class ChartActivity extends Activity
         chanel_n_HistorySeries.useImplicitXVals();
        
         
-        myHistoryPlot.setRangeBoundaries(7200, 9500, BoundaryMode.FIXED);    
+        myHistoryPlot.setRangeBoundaries(7500, 10200, BoundaryMode.FIXED);    
         myHistoryPlot.setDomainBoundaries(0, X_RANGE_SIZE, BoundaryMode.FIXED);
-        myHistoryPlot.addSeries(chanel_a_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 100, 200), null, null, null));
-        myHistoryPlot.addSeries(chanel_b_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 200, 100), null, null, null));
-        myHistoryPlot.addSeries(chanel_c_HistorySeries,new LineAndPointFormatter(Color.rgb(200, 100, 100), null, null, null));
-        myHistoryPlot.addSeries(chanel_d_HistorySeries,new LineAndPointFormatter(Color.rgb( 0,   0,  153), null, null, null));
-        myHistoryPlot.addSeries(chanel_e_HistorySeries,new LineAndPointFormatter(Color.rgb( 51,  51, 204), null, null, null));
-        myHistoryPlot.addSeries(chanel_f_HistorySeries,new LineAndPointFormatter(Color.rgb(102, 102, 153), null, null, null));
+        myHistoryPlot.addSeries(chanel_a_HistorySeries,new LineAndPointFormatter(Color.rgb(255, 255,  255), null, null, null));
+        myHistoryPlot.addSeries(chanel_b_HistorySeries,new LineAndPointFormatter(Color.rgb(255, 255,    0), null, null, null));
+        myHistoryPlot.addSeries(chanel_c_HistorySeries,new LineAndPointFormatter(Color.rgb(255, 102,  255), null, null, null));
+        myHistoryPlot.addSeries(chanel_d_HistorySeries,new LineAndPointFormatter(Color.rgb(255, 153,  102), null, null, null));
+        myHistoryPlot.addSeries(chanel_e_HistorySeries,new LineAndPointFormatter(Color.rgb(255,   0,  51), null, null, null));
+        myHistoryPlot.addSeries(chanel_f_HistorySeries,new LineAndPointFormatter(Color.rgb(204, 153, 255), null, null, null));
         myHistoryPlot.addSeries(chanel_g_HistorySeries,new LineAndPointFormatter(Color.rgb(216, 177, 100), null, null, null));
-        myHistoryPlot.addSeries(chanel_h_HistorySeries,new LineAndPointFormatter(Color.rgb( 51, 204, 153), null, null, null));
-        myHistoryPlot.addSeries(chanel_i_HistorySeries,new LineAndPointFormatter(Color.rgb( 77,  51, 204), null, null, null));
+        myHistoryPlot.addSeries(chanel_h_HistorySeries,new LineAndPointFormatter(Color.rgb(102,   0,  51), null, null, null));
+        myHistoryPlot.addSeries(chanel_i_HistorySeries,new LineAndPointFormatter(Color.rgb(153, 255,   0), null, null, null));
         myHistoryPlot.addSeries(chanel_j_HistorySeries,new LineAndPointFormatter(Color.rgb(204,  77,  51), null, null, null));
-        myHistoryPlot.addSeries(chanel_k_HistorySeries,new LineAndPointFormatter(Color.rgb(255, 255,  10), null, null, null));
+        myHistoryPlot.addSeries(chanel_k_HistorySeries,new LineAndPointFormatter(Color.rgb(102, 255,  255), null, null, null));
         myHistoryPlot.addSeries(chanel_l_HistorySeries,new LineAndPointFormatter(Color.rgb(  0, 204, 204), null, null, null));
-        myHistoryPlot.addSeries(chanel_m_HistorySeries,new LineAndPointFormatter(Color.rgb(  0, 102, 204), null, null, null));
+        myHistoryPlot.addSeries(chanel_m_HistorySeries,new LineAndPointFormatter(Color.rgb(204, 255,   0), null, null, null));
         myHistoryPlot.addSeries(chanel_n_HistorySeries,new LineAndPointFormatter(Color.rgb(100, 102, 204), null, null, null));
                  
         
@@ -141,6 +141,7 @@ public class ChartActivity extends Activity
 		my_edf_data.set_uri_file(result_file_uri);
 		my_edf_data.init_parser_file();
 		edf_header_chanel = my_edf_data.get_label_chanel();
+		System.out.println("hola mundo"+edf_header_chanel[0]);
 		my_edf_data.get_signal();
 		run_capture();
 			
@@ -284,20 +285,20 @@ public void run_capture()
         chanel_n_HistorySeries.removeFirst(); 
 	   }
 	   
-        chanel_a_HistorySeries.addLast(null, signal_a[b]);
-        chanel_b_HistorySeries.addLast(null, signal_b[b]);
-        chanel_c_HistorySeries.addLast(null, signal_c[b]);
-        chanel_d_HistorySeries.addLast(null, signal_d[b]);
-        chanel_e_HistorySeries.addLast(null, signal_e[b]);
-        chanel_f_HistorySeries.addLast(null, signal_f[b]);
-        chanel_g_HistorySeries.addLast(null, signal_g[b]);
-        chanel_h_HistorySeries.addLast(null, signal_h[b]);
-        chanel_i_HistorySeries.addLast(null, signal_i[b]);
-        chanel_j_HistorySeries.addLast(null, signal_j[b]);
-        chanel_k_HistorySeries.addLast(null, signal_k[b]-500); // le resto 500 para que no salga junto a la otra 
-        chanel_l_HistorySeries.addLast(null, signal_l[b]);
-        chanel_m_HistorySeries.addLast(null, signal_m[b]);	
-        chanel_n_HistorySeries.addLast(null, signal_n[b]);		    		  	    	   		   
+        chanel_a_HistorySeries.addLast(null, signal_a[b] + 245); // 7 senal 
+        chanel_b_HistorySeries.addLast(null, signal_b[b] + 1000); // 3 senal 
+        chanel_c_HistorySeries.addLast(null, signal_c[b] + 1250); // 1 senal 
+        chanel_d_HistorySeries.addLast(null, signal_d[b]  + 35 ); // 13 senal 
+        chanel_e_HistorySeries.addLast(null, signal_e[b] + 925); // 2 senal
+        chanel_f_HistorySeries.addLast(null, signal_f[b] - 150); // 14 senal 
+        chanel_g_HistorySeries.addLast(null, signal_g[b] + 295); // 8 senal 
+        chanel_h_HistorySeries.addLast(null, signal_h[b] + 275); // 10 senal 
+        chanel_i_HistorySeries.addLast(null, signal_i[b] + 200); // 11 senal 
+        chanel_j_HistorySeries.addLast(null, signal_j[b] + 135); // 12 senal 
+        chanel_k_HistorySeries.addLast(null, signal_k[b] - 125); // senal 9 
+        chanel_l_HistorySeries.addLast(null, signal_l[b] + 525); // 4 senal 
+        chanel_m_HistorySeries.addLast(null, signal_m[b] + 200);	// 6 senal
+        chanel_n_HistorySeries.addLast(null, signal_n[b] + 285); // 5 senal 		    		  	    	   		   
        }
       duerme(1000);     
    }	
