@@ -1,7 +1,8 @@
-package com.module.neurosana;
+package com.activities.neurosana;
 
 import java.io.File;
 
+import com.module.neurosana.R;
 import com.utilities.neurosana.ConnectorBtThread;
 import com.utilities.neurosana.ManageFiles;
 
@@ -16,6 +17,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +99,10 @@ private int is_verify_sensor = 0 ;
 		
 		connection = new ConnectorBtThread(Handler_responses_server);
 		connection.connect_client(device_to_conn);		
+		
+		/*evitamos que se ponga en reposo*/
+		
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	@Override
@@ -159,18 +165,44 @@ private int is_verify_sensor = 0 ;
 	/*comando para cancelar captura de datos*/
 	public void command_cancel(View v)
 	{
-		if (connection.get_My_State() != ConnectorBtThread.STATE_CONNECTED) 
+		if (connection.get_My_State() == ConnectorBtThread.BUSSY ) 
         {
-          Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
-          return;
+		  connection.setinfo(COMANDO_CANCELAR);	
+          }
+        
+        else
+        {
+        	Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
+            return;
+          
+        }		
+	}
+	//
+	
+	
+	/*comando para verificar sensores*/
+
+	public void verify_sensor(View v)
+	{
+        if (connection.get_My_State() != ConnectorBtThread.STATE_CONNECTED) 
+        {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
+            return;
         }
         
         else
         {
-         connection.setinfo(COMANDO_CANCELAR);
-        }		
+        	if(verify_or_create_directory())
+        	{
+        	connection.setinfo(COMANDO_VERIFICAR);
+        	}	
+        	else
+        	{
+        	Toast.makeText(this, R.string.directory_error, Toast.LENGTH_LONG).show();
+        	}    
+        }			
 	}
-	//
+	
 	
 	/*comando para iniciar captura de datos */
 	public void command_save(View v)
@@ -263,6 +295,10 @@ private int is_verify_sensor = 0 ;
   
   case COMANDO_ERROR: 
 	  Toast.makeText(this, R.string.error_acquiring, Toast.LENGTH_LONG).show(); 
+  break;
+  
+  case COMANDO_FALLA:
+     Toast.makeText(this, R.string.error_acquiring, Toast.LENGTH_LONG).show();
   break;
   
   case COMANDO_VERIFICADO:

@@ -18,32 +18,48 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.utilities.edf;
+package com.utilities_edf.neurosana;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class represents the complete content of an EDF-File.
- */
-public class EDFParserResult
+public class EDFAnnotation
 {
-	protected EDFHeader header;
-	protected EDFSignal signal;
-	protected List<EDFAnnotation> annotations;
+	protected double onSet = 0;
+	protected double duration = 0;
+	protected List<String> annotations = new ArrayList<String>();
 
-	public EDFHeader getHeader()
+	protected EDFAnnotation(String onSet, String duration, String[] annotations)
 	{
-		return header;
+		this.onSet = Double.parseDouble(onSet);
+		if (duration != null && duration != "")
+			this.duration = Double.parseDouble(duration);
+		for (int i = 0; i < annotations.length; i++)
+		{
+			if (annotations[i] == null || annotations[i].trim().equals(""))
+				continue;
+			this.annotations.add(annotations[i]);
+		}
 	}
 
-	public EDFSignal getSignal()
+	public double getOnSet()
 	{
-		return signal;
+		return onSet;
 	}
 
-	public List<EDFAnnotation> getAnnotations()
+	public double getDuration()
+	{
+		return duration;
+	}
+
+	public List<String> getAnnotations()
 	{
 		return annotations;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Annotation [onSet=" + onSet + ", duration=" + duration + ", annotations=" + annotations + "]";
+	}
 }

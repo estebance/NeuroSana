@@ -1,5 +1,6 @@
-package com.module.neurosana;
+package com.activities.neurosana;
 
+import com.module.neurosana.R;
 import com.utilities.neurosana.ManageFiles;
 import com.utilities.neurosana.ReadEdf;
 

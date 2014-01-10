@@ -18,37 +18,32 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.utilities.edf;
+package com.utilities_edf.neurosana;
+
+import java.util.List;
 
 /**
- * This class represents the complete data records of an EDF-File.
+ * This class represents the complete content of an EDF-File.
  */
-public class EDFSignal
+public class EDFParserResult
 {
+	protected EDFHeader header;
+	protected EDFSignal signal;
+	protected List<EDFAnnotation> annotations;
 
-	protected Double[] unitsInDigit;
-	protected short[][] digitalValues;
-	protected double[][] valuesInUnits;
-	protected int[] range_digital_units_values;
-
-	public Double[] getUnitsInDigit()
+	public EDFHeader getHeader()
 	{
-		return unitsInDigit;
+		return header;
 	}
 
-	public short[][] getDigitalValues()
+	public EDFSignal getSignal()
 	{
-		return digitalValues;
+		return signal;
 	}
 
-	public double[][] getValuesInUnits()
+	public List<EDFAnnotation> getAnnotations()
 	{
-		return valuesInUnits;
+		return annotations;
 	}
-
-	public int[] range_digital_units_values()
-	{
-		return range_digital_units_values;
-	}	
 
 }

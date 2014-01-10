@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.utilities.edf;
+package com.utilities_edf.neurosana;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,12 +30,12 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.utilities.edf.ParseUtils.readASCIIFromStream;
-import static com.utilities.edf.ParseUtils.readBulkASCIIFromStream;
-import static com.utilities.edf.ParseUtils.readBulkDoubleFromStream;
-import static com.utilities.edf.ParseUtils.readBulkIntFromStream;
-import static com.utilities.edf.ParseUtils.removeElement;
-import static com.utilities.edf.EDFConstants.*;
+import static com.utilities_edf.neurosana.EDFConstants.*;
+import static com.utilities_edf.neurosana.ParseUtils.readASCIIFromStream;
+import static com.utilities_edf.neurosana.ParseUtils.readBulkASCIIFromStream;
+import static com.utilities_edf.neurosana.ParseUtils.readBulkDoubleFromStream;
+import static com.utilities_edf.neurosana.ParseUtils.readBulkIntFromStream;
+import static com.utilities_edf.neurosana.ParseUtils.removeElement;
 
 /**
  * This is an EDFParser which is capable of parsing files in the formats EDF and

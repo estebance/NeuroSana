@@ -1,4 +1,4 @@
-package com.module.neurosana;
+package com.activities.neurosana;
 
 
 import java.text.DecimalFormat;
@@ -11,6 +11,7 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
+import com.module.neurosana.R;
 import com.utilities.neurosana.ReadEdf;
 
 import android.os.Bundle;
@@ -262,7 +263,7 @@ public void run_capture()
    signal_m =  my_edf_data.my_signal_part(i, chanel_number[12], size_limit);
    signal_n = my_edf_data.my_signal_part( i, chanel_number[13], size_limit);
    
-   System.out.println("el limite de tamaño es_:"+size_limit);	 
+   System.out.println("el limite de tama??o es_:"+size_limit);	 
    System.out.println("el incremento es_:"+increment);
 
    for(int b =  0 ; b < signal_a.length ; b++)

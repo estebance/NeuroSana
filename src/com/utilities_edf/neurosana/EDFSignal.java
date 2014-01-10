@@ -18,34 +18,37 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.utilities.edf;
-
-import java.io.IOException;
+package com.utilities_edf.neurosana;
 
 /**
- * This exception is thrown if the file format is not according to EDF.
+ * This class represents the complete data records of an EDF-File.
  */
-public class EDFParserException extends IOException
+public class EDFSignal
 {
-	private static final long serialVersionUID = 3807109927368496625L;
 
-	public EDFParserException()
+	protected Double[] unitsInDigit;
+	protected short[][] digitalValues;
+	protected double[][] valuesInUnits;
+	protected int[] range_digital_units_values;
+
+	public Double[] getUnitsInDigit()
 	{
-		this("File format not according to EDF/EDF+ specification.", null);
+		return unitsInDigit;
 	}
 
-	public EDFParserException(Throwable th)
+	public short[][] getDigitalValues()
 	{
-		this("File format not according to EDF/EDF+ specification.", th);
+		return digitalValues;
 	}
 
-	public EDFParserException(String message)
+	public double[][] getValuesInUnits()
 	{
-		this(message, null);
+		return valuesInUnits;
 	}
 
-	public EDFParserException(String message, Throwable th)
+	public int[] range_digital_units_values()
 	{
-		super(message, th);
-	}
+		return range_digital_units_values;
+	}	
+
 }

@@ -64,6 +64,7 @@
         android:layout_alignLeft="@+id/button1bt_control_activity"
         android:layout_alignRight="@+id/button1bt_control_activity"
         android:layout_below="@+id/textView1bt_control_activity"
+        android:onClick="verify_sensor"
         android:text="@string/verify_eeg"
         android:textColor="@color/text_color" />
 

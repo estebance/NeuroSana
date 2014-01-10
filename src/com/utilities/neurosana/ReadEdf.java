@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 
 
-import com.utilities.edf.EDFParser;
-import com.utilities.edf.EDFParserResult;
+import com.utilities_edf.neurosana.EDFParser;
+import com.utilities_edf.neurosana.EDFParserResult;
 
 public class ReadEdf 
 {

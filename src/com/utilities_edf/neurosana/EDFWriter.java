@@ -18,9 +18,9 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.utilities.edf;
+package com.utilities_edf.neurosana;
 
-import static com.utilities.edf.EDFConstants.*;
+import static com.utilities_edf.neurosana.EDFConstants.*;
 
 import java.io.IOException;
 import java.io.OutputStream;

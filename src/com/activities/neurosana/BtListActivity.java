@@ -1,6 +1,8 @@
-package com.module.neurosana;
+package com.activities.neurosana;
 
 import java.util.ArrayList;
+
+import com.module.neurosana.R;
 
 import android.os.Bundle;
 import android.app.Activity;

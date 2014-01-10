@@ -9,7 +9,8 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 
-import com.module.neurosana.ControlBtActivity;
+import com.activities.neurosana.ControlBtActivity;
+
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
@@ -107,7 +108,16 @@ public void setinfo (int data)
    {
      if (myState != STATE_CONNECTED)
      { 
-     return;
+    	if(myState == BUSSY)
+    	{
+    	     send = my_Connected;
+    	     send.write(data);
+    	} 
+    	else 
+    	{
+    		return;	
+    	}
+     
      }
      else
      {
@@ -231,6 +241,7 @@ public class Management_Connection extends Thread
 	private static final int COMANDO_VERIFICAR = 11;
 	private static final int COMANDO_VERIFICADO = 12; 
 	private static final int COMANDO_ERROR = -1;
+	private static final int COMANDO_FALLA = 10;
 	private static final int COMANDO_ERROR_VERIFICAR = -2 ;
     
     public Management_Connection(BluetoothSocket socket) 
@@ -298,11 +309,13 @@ public class Management_Connection extends Thread
                 }
                 
 
-                set_My_State(STATE_CONNECTED); 
+               
                 
                 } // fin del while 
-            	                                     
+            	       
+            	 set_My_State(STATE_CONNECTED); 
             }
+        	
               
             catch(Exception e)
             {
@@ -311,7 +324,8 @@ public class Management_Connection extends Thread
             }
         	
         	
-          }	  
+          }	
+                    
                     
           if(orden == COMANDO_INICIADO)
           {
@@ -326,7 +340,12 @@ public class Management_Connection extends Thread
             send_to_ui(respuesta);
             break;
             }
-            if(respuesta == COMANDO_ERROR)
+            if(respuesta == COMANDO_FALLA)
+            {
+            send_to_ui(respuesta);
+            break;
+            }
+            if(respuesta == COMANDO_CANCELADO)
             {
             send_to_ui(respuesta);
             break;
