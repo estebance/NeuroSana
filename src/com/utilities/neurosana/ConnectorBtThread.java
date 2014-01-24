@@ -303,10 +303,10 @@ public class Management_Connection extends Thread
                 String b =  temp_in.readLine().toString();
                 respuesta = Integer.parseInt(b);
                 System.out.println("La respuesta del server es:"+respuesta);
-                if (respuesta >= 32768 && respuesta <= 65535 ) //   if(respuesta == COMANDO_VERIFICADO)
+                if (respuesta >= 16384 && respuesta <= 32767 ) //   if(respuesta == COMANDO_VERIFICADO)
                 {
                 	
-                 if(respuesta == 65535)
+                 if(respuesta == 32767)
                  { 
                 	 send_to_ui(COMANDO_VERIFICADO);
                 	 break;

@@ -306,7 +306,7 @@ private int is_verify_sensor = 0 ;
   
   default: 
 
-   if (command_from_server >= 32768)
+   if (command_from_server >= 16445)
    {
 	 DecodeBi channels = new DecodeBi();
 	 String channel_error = channels.decode(command_from_server);
