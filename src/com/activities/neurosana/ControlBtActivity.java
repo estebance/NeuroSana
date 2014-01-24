@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.module.neurosana.R;
 import com.utilities.neurosana.ConnectorBtThread;
+import com.utilities.neurosana.DecodeBi;
 import com.utilities.neurosana.ManageFiles;
 
 import android.net.Uri;
@@ -12,8 +13,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -56,12 +59,11 @@ private static final int COMANDO_INICIAR=4;
 private static final int COMANDO_TERMINADO=5;
 private static final int COMANDO_CANCELADO=6;
 private static final int COMANDO_INICIADO=7;
-private static final int COMANDO_FINALIZADO=8;
-private static final int COMANDO_FALLA = 10 ;
 private static final int COMANDO_VERIFICAR = 11;
 private static final int COMANDO_VERIFICADO = 12; 
 private static final int COMANDO_ERROR = -1;
 private static final int COMANDO_ERROR_VERIFICAR = -2 ;
+
 
 /*Elementos de la vista*/
 
@@ -289,16 +291,8 @@ private int is_verify_sensor = 0 ;
 	    Toast.makeText(this, R.string.init_acquiring, Toast.LENGTH_LONG).show(); 
   break;  
   
-  case COMANDO_FINALIZADO:
-	    Toast.makeText(this, R.string.finished_acquiring, Toast.LENGTH_LONG).show(); 
-  break;  
-  
   case COMANDO_ERROR: 
 	  Toast.makeText(this, R.string.error_acquiring, Toast.LENGTH_LONG).show(); 
-  break;
-  
-  case COMANDO_FALLA:
-     Toast.makeText(this, R.string.error_acquiring, Toast.LENGTH_LONG).show();
   break;
   
   case COMANDO_VERIFICADO:
@@ -310,7 +304,19 @@ private int is_verify_sensor = 0 ;
    Toast.makeText(this, R.string.error_verify, Toast.LENGTH_LONG).show();   
   break; 
   
-  
+  default: 
+
+   if (command_from_server >= 32768)
+   {
+	 DecodeBi channels = new DecodeBi();
+	 String channel_error = channels.decode(command_from_server);
+	 verdialogo(channel_error);
+	 
+   }  
+	  
+	  
+  break;
+   
   }   
     
   }
@@ -404,6 +410,27 @@ if(fileuri != null)
     setResult(RESULT_OK, data);			
 }
 finish();	
+}
+
+
+public void verdialogo(String messaje)
+{
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage(messaje);
+    builder.setTitle("Dispositivo Mal Ubicado");
+    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() 
+    {
+      public void onClick(DialogInterface dialog, int id) 
+      {
+       dialog.cancel();
+      }
+      });
+    
+    AlertDialog a =  builder.create();	
+    a.show();		
+	
+	
 }
 
 }

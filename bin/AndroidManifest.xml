@@ -26,9 +26,9 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter>           
+                <action android:name="org.neurosana.eegfile" />
                 <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="org.neurosana.eegfile"/>;
             </intent-filter>         
         </activity>
         <activity

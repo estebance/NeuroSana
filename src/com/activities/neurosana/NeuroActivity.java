@@ -218,8 +218,7 @@ public class NeuroActivity extends Activity
 	{
 	  Intent data = new Intent();
 	  setResult(RESULT_OK, data);
-	  data.setDataAndType(uri, "text/plain");
-	  //data.putExtra("uri", result_file_uri);
+	  data.setDataAndType(uri, getIntent().getType());
 	  finish();
 	}	
 

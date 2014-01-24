@@ -1,10 +1,12 @@
 package com.utilities.neurosana;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -230,19 +232,20 @@ public class Management_Connection extends Thread
     private OutputStream outgoing_data;
     
     /*Respuestas y solicitudes al servidor*/
-    private static final int COMANDO_SALIR = 1;
-    private static final int COMANDO_ENVIAR = 2;
-    private static final int COMANDO_CANCELAR=3;
-    private static final int COMANDO_INICIAR=4; ;
-    private static final int COMANDO_TERMINADO=5;
-    private static final int COMANDO_CANCELADO=6;
-    private static final int COMANDO_INICIADO=7;
-    private static final int COMANDO_FINALIZADO=8;	
+    private static final int COMANDO_SALIR =      1;
+    private static final int COMANDO_ENVIAR =     2;
+    private static final int COMANDO_CANCELAR=    3;
+    private static final int COMANDO_INICIAR=     4; 
+    private static final int COMANDO_TERMINADO=   5;
+    private static final int COMANDO_CANCELADO=   6;
+    private static final int COMANDO_INICIADO=    7;
+   // private static final int COMANDO_FINALIZADO=8;	   // pilas con la captura de un 8 en la vista 
 	private static final int COMANDO_VERIFICAR = 11;
-	private static final int COMANDO_VERIFICADO = 12; 
-	private static final int COMANDO_ERROR = -1;
-	private static final int COMANDO_FALLA = 10;
-	private static final int COMANDO_ERROR_VERIFICAR = -2 ;
+	private static final int COMANDO_ERROR =     13;
+	private static final int COMANDO_VERIFICADO = 12;  // se captura en la vista  
+	private static final int COMANDO_NO_VERIFICADO  = -2;
+
+	
     
     public Management_Connection(BluetoothSocket socket) 
     {    	
@@ -295,21 +298,35 @@ public class Management_Connection extends Thread
         	try
             {
             	while(true)
-                {			
-                respuesta = incoming_data.read();
-                if(respuesta == COMANDO_VERIFICADO)
                 {
-                send_to_ui(respuesta);               
-                break;
-                }
-                if(respuesta == COMANDO_ERROR_VERIFICAR)
+                BufferedReader temp_in = new BufferedReader(new InputStreamReader(incoming_data));
+                String b =  temp_in.readLine().toString();
+                respuesta = Integer.parseInt(b);
+                System.out.println("La respuesta del server es:"+respuesta);
+                if (respuesta >= 32768 && respuesta <= 65535 ) //   if(respuesta == COMANDO_VERIFICADO)
                 {
-                send_to_ui(respuesta);
-                break;
+                	
+                 if(respuesta == 65535)
+                 { 
+                	 send_to_ui(COMANDO_VERIFICADO);
+                	 break;
+                 } 
+                 else
+                 { 
+                   
+                	send_to_ui(respuesta);
+                	break;
+                	
+                 }
                 }
                 
-
-               
+                 if(respuesta == COMANDO_ERROR)
+                 {
+                     send_to_ui(COMANDO_NO_VERIFICADO);
+                     break;   
+                 } 
+                
+                
                 
                 } // fin del while 
             	       
@@ -335,12 +352,12 @@ public class Management_Connection extends Thread
         	while(true)
             {			
             respuesta = incoming_data.read();
-            if(respuesta == COMANDO_FINALIZADO)
+            if(respuesta == COMANDO_TERMINADO)
             {
             send_to_ui(respuesta);
             break;
             }
-            if(respuesta == COMANDO_FALLA)
+            if(respuesta == COMANDO_ERROR)
             {
             send_to_ui(respuesta);
             break;
@@ -440,7 +457,7 @@ public class Management_Connection extends Thread
 	    	buffer_stream =new BufferedInputStream(incoming_data);
 	    	file_stream = new FileOutputStream(data_eeg);
 	    	 
-	    	 while ((bytes_file = buffer_stream.read(buffer_file)) != 0)
+	    /*	 while ((bytes_file = buffer_stream.read(buffer_file)) != 0)
 	    	 {
 	    	 System.out.println(bytes_file);	
 	    	 if(bytes_file == 1)
@@ -451,7 +468,23 @@ public class Management_Connection extends Thread
 	    	 {
 	    	 file_stream.write(buffer_file, 0, bytes_file);
 			 file_stream.flush();}
-	    	 }
+	    	 } */
+	    	   
+            while (true) 
+            {
+               int dataFromStream = incoming_data.read();
+               if (dataFromStream == -1) 
+               {
+                  break;
+               }
+               file_stream.write(dataFromStream);
+               file_stream.flush();
+            }
+          
+	    	
+	    	
+	    	
+	    	 file_stream.flush(); // nuevo comentario 
 	    	 file_stream.close();
 	    	 /*esperar por la respuesta del servidor ante la orden*/
 	    	 

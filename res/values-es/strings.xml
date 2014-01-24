@@ -27,7 +27,7 @@
     <string name="bussy">Ocupado</string>
     <string name="error_connection">Error Conexion</string>
     <string name="error_acquiring">Error Adquiriendo Datos</string>
-    <string name="error_verify">Dispositivo Mal Ubicado</string>
+    <string name="error_verify">Auricular Apagado</string>
     <string name="is_verify">Dispositivo Listo para Capturar Datos</string>
     <string name="connected">Conectado</string>
     <string name="connecting">Conectando</string>

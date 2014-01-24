@@ -210,7 +210,7 @@ public void run_capture()
   new Thread(new Runnable() 
   {
 
-  int increment = 20 ;
+  int increment = 400 ;
   int resta = 0 ;	
     	
    public void run()
@@ -243,7 +243,7 @@ public void run_capture()
 	   
    resta = size_signal - size_limit;
    // si los datos que quedan son menores al incremento establecido , set al incremento con este valor 
-   if(resta < 20)
+   if(resta < 400)
    {
 	increment = resta;   
    }
