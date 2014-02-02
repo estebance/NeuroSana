@@ -23,7 +23,7 @@ import android.graphics.Color;
 
 public class ChartActivity extends Activity 
 {
- private static final int X_RANGE_SIZE = 100;	
+ private static final int X_RANGE_SIZE = 200;	
  private XYPlot myHistoryPlot = null;
  private SimpleXYSeries chanel_a_HistorySeries = null;
  private SimpleXYSeries chanel_b_HistorySeries = null;
@@ -104,7 +104,7 @@ public class ChartActivity extends Activity
         chanel_n_HistorySeries.useImplicitXVals();
        
         
-        myHistoryPlot.setRangeBoundaries(7500, 10200, BoundaryMode.FIXED);    
+        myHistoryPlot.setRangeBoundaries(5000, 12000, BoundaryMode.FIXED);    
         myHistoryPlot.setDomainBoundaries(0, X_RANGE_SIZE, BoundaryMode.FIXED);
         myHistoryPlot.addSeries(chanel_a_HistorySeries,new LineAndPointFormatter(Color.rgb(255, 255,  255), null, null, null));
         myHistoryPlot.addSeries(chanel_b_HistorySeries,new LineAndPointFormatter(Color.rgb(255, 255,    0), null, null, null));
@@ -210,7 +210,7 @@ public void run_capture()
   new Thread(new Runnable() 
   {
 
-  int increment = 400 ;
+  int increment = 64 ;
   int resta = 0 ;	
     	
    public void run()
@@ -243,10 +243,15 @@ public void run_capture()
 	   
    resta = size_signal - size_limit;
    // si los datos que quedan son menores al incremento establecido , set al incremento con este valor 
-   if(resta < 400)
+   if(resta < 64)
    {
 	increment = resta;   
    }
+   
+   if(increment == 0)
+   {
+	   break;  
+   }   
    size_limit += increment; 
    signal_a =  my_edf_data.my_signal_part(i, chanel_number[0], size_limit);   
    signal_b =  my_edf_data.my_signal_part(i, chanel_number[1], size_limit);   
@@ -286,22 +291,22 @@ public void run_capture()
         chanel_n_HistorySeries.removeFirst(); 
 	   }
 	   
-        chanel_a_HistorySeries.addLast(null, signal_a[b] + 245); // 7 senal 
-        chanel_b_HistorySeries.addLast(null, signal_b[b] + 1000); // 3 senal 
-        chanel_c_HistorySeries.addLast(null, signal_c[b] + 1250); // 1 senal 
-        chanel_d_HistorySeries.addLast(null, signal_d[b]  + 35 ); // 13 senal 
-        chanel_e_HistorySeries.addLast(null, signal_e[b] + 925); // 2 senal
-        chanel_f_HistorySeries.addLast(null, signal_f[b] - 150); // 14 senal 
-        chanel_g_HistorySeries.addLast(null, signal_g[b] + 295); // 8 senal 
-        chanel_h_HistorySeries.addLast(null, signal_h[b] + 275); // 10 senal 
-        chanel_i_HistorySeries.addLast(null, signal_i[b] + 200); // 11 senal 
-        chanel_j_HistorySeries.addLast(null, signal_j[b] + 135); // 12 senal 
-        chanel_k_HistorySeries.addLast(null, signal_k[b] - 125); // senal 9 
-        chanel_l_HistorySeries.addLast(null, signal_l[b] + 525); // 4 senal 
-        chanel_m_HistorySeries.addLast(null, signal_m[b] + 200);	// 6 senal
-        chanel_n_HistorySeries.addLast(null, signal_n[b] + 285); // 5 senal 		    		  	    	   		   
+        chanel_a_HistorySeries.addLast(null, signal_a[b] - 50 ); // 7 senal +245
+        chanel_b_HistorySeries.addLast(null, signal_b[b] + 500); // 3 senal +1000
+        chanel_c_HistorySeries.addLast(null, signal_c[b] + 1200); // 1 senal +1250
+        chanel_d_HistorySeries.addLast(null, signal_d[b] - 2000 ); // 13 senal +35
+        chanel_e_HistorySeries.addLast(null, signal_e[b] + 2100); // 2 senal +925
+        chanel_f_HistorySeries.addLast(null, signal_f[b] - 2600); // 14 senal -150
+        chanel_g_HistorySeries.addLast(null, signal_g[b] + 200); // 8 senal +295
+        chanel_h_HistorySeries.addLast(null, signal_h[b] - 300); // 10 senal  +275
+        chanel_i_HistorySeries.addLast(null, signal_i[b] - 1200); // 11 senal  +200
+        chanel_j_HistorySeries.addLast(null, signal_j[b] - 600); // 12 senal +135
+        chanel_k_HistorySeries.addLast(null, signal_k[b] - 2400); // senal 9 -125
+        chanel_l_HistorySeries.addLast(null, signal_l[b] + 700); // 4 senal +525
+        chanel_m_HistorySeries.addLast(null, signal_m[b] + 1400);	// 6 senal +200
+        chanel_n_HistorySeries.addLast(null, signal_n[b] + 2500); // 5 senal 		+285    		  	    	   		   
        }
-      duerme(1000);     
+      duerme(2000);     
    }	
 
 

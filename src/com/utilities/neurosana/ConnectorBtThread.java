@@ -239,8 +239,7 @@ public class Management_Connection extends Thread
     private static final int COMANDO_TERMINADO=   5;
     private static final int COMANDO_CANCELADO=   6;
     private static final int COMANDO_INICIADO=    7;
-   // private static final int COMANDO_FINALIZADO=8;	   // pilas con la captura de un 8 en la vista 
-	private static final int COMANDO_VERIFICAR = 11;
+    private static final int COMANDO_VERIFICAR = 11;
 	private static final int COMANDO_ERROR =     13;
 	private static final int COMANDO_VERIFICADO = 12;  // se captura en la vista  
 	private static final int COMANDO_NO_VERIFICADO  = -2;
@@ -303,7 +302,7 @@ public class Management_Connection extends Thread
                 String b =  temp_in.readLine().toString();
                 respuesta = Integer.parseInt(b);
                 System.out.println("La respuesta del server es:"+respuesta);
-                if (respuesta >= 16384 && respuesta <= 32767 ) //   if(respuesta == COMANDO_VERIFICADO)
+                if (respuesta > 16383 && respuesta <= 32767 ) //   if(respuesta == COMANDO_VERIFICADO)
                 {
                 	
                  if(respuesta == 32767)
@@ -313,7 +312,7 @@ public class Management_Connection extends Thread
                  } 
                  else
                  { 
-                   
+                    System.out.println("valor"+respuesta);
                 	send_to_ui(respuesta);
                 	break;
                 	
@@ -354,7 +353,7 @@ public class Management_Connection extends Thread
             respuesta = incoming_data.read();
             if(respuesta == COMANDO_TERMINADO)
             {
-            send_to_ui(respuesta);
+            send_to_ui(respuesta+9); // el nueve representa un cambio para ajustar la respuesta a la vista
             break;
             }
             if(respuesta == COMANDO_ERROR)
@@ -438,7 +437,7 @@ public class Management_Connection extends Thread
        byte[] buffer_file_name = new byte[1024];
        byte[] buffer_file = new byte[64];
        int bytes_file_name =0;
-       int bytes_file , respuesta_servidor;;
+       int bytes_file , respuesta_servidor;
         try 
         {
         	set_My_State(BUSSY_FILE);
@@ -457,7 +456,7 @@ public class Management_Connection extends Thread
 	    	buffer_stream =new BufferedInputStream(incoming_data);
 	    	file_stream = new FileOutputStream(data_eeg);
 	    	 
-	    /*	 while ((bytes_file = buffer_stream.read(buffer_file)) != 0)
+	    	 while ((bytes_file = buffer_stream.read(buffer_file)) != 0)
 	    	 {
 	    	 System.out.println(bytes_file);	
 	    	 if(bytes_file == 1)
@@ -468,23 +467,9 @@ public class Management_Connection extends Thread
 	    	 {
 	    	 file_stream.write(buffer_file, 0, bytes_file);
 			 file_stream.flush();}
-	    	 } */
-	    	   
-            while (true) 
-            {
-               int dataFromStream = incoming_data.read();
-               if (dataFromStream == -1) 
-               {
-                  break;
-               }
-               file_stream.write(dataFromStream);
-               file_stream.flush();
-            }
-          
-	    	
-	    	
-	    	
-	    	 file_stream.flush(); // nuevo comentario 
+	    	 } 
+	    	  	    	
+	    	 //file_stream.flush(); // nuevo comentario 
 	    	 file_stream.close();
 	    	 /*esperar por la respuesta del servidor ante la orden*/
 	    	 

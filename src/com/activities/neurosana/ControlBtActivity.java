@@ -61,7 +61,8 @@ private static final int COMANDO_CANCELADO=6;
 private static final int COMANDO_INICIADO=7;
 private static final int COMANDO_VERIFICAR = 11;
 private static final int COMANDO_VERIFICADO = 12; 
-private static final int COMANDO_ERROR = -1;
+private static final int COMANDO_TERMINADO_CAPTURA=14;
+private static final int COMANDO_ERROR = 13;
 private static final int COMANDO_ERROR_VERIFICAR = -2 ;
 
 
@@ -153,8 +154,10 @@ private int is_verify_sensor = 0 ;
 	public void return_to_first_activity(View v)
 	{
 		connection.setinfo(COMANDO_SALIR);
-		if(fileuri != null)
-		{
+		
+	  if(fileuri != null)
+		
+	    {
 		    Intent data = new Intent();
 		    data.putExtra("fileuri", fileuri);
 		    setResult(RESULT_OK, data);			
@@ -280,24 +283,42 @@ private int is_verify_sensor = 0 ;
   case COMANDO_TERMINADO:   
 	    Toast.makeText(this, R.string.finished_acquiring, Toast.LENGTH_LONG).show();
 	   	String nombre_archivo = connection.get_namefile(); 
-	   	get_uri_file(nombre_archivo); 	   		  
+	   	get_uri_file(nombre_archivo); 	 
+	   	disable_verify();
+	   	disable_cancel();
+	   	disable_save();
   break;
   
+  case COMANDO_TERMINADO_CAPTURA:
+	  Toast.makeText(this, R.string.finished_acquiring, Toast.LENGTH_LONG).show();
+	  disable_verify();
+	  enable_save();
+  break;   
+  
   case COMANDO_CANCELADO:
+	    is_verify_sensor = 1; 
 	    Toast.makeText(this, R.string.cancel_acquiring, Toast.LENGTH_LONG).show(); 
+	    disable_verify();
+	    disable_save();
+	    enable_capture();
   break;
 
   case COMANDO_INICIADO:
 	    Toast.makeText(this, R.string.init_acquiring, Toast.LENGTH_LONG).show(); 
+	    disable_verify();
+	    disable_save();
   break;  
   
   case COMANDO_ERROR: 
-	  Toast.makeText(this, R.string.error_acquiring, Toast.LENGTH_LONG).show(); 
+	  Toast.makeText(this, R.string.error_acquiring, Toast.LENGTH_LONG).show();  
+	  disable_buttons();
+	  enable_verify();
   break;
   
   case COMANDO_VERIFICADO:
-	 Toast.makeText(this, R.string.is_verify, Toast.LENGTH_LONG).show();   
-     is_verify_sensor = 1 ;
+	 Toast.makeText(this, R.string.is_verify, Toast.LENGTH_LONG).show();  
+	 disable_save();
+     enable_capture();
   break;
   
   case COMANDO_ERROR_VERIFICAR:
@@ -306,7 +327,7 @@ private int is_verify_sensor = 0 ;
   
   default: 
 
-   if (command_from_server >= 16445)
+   if (command_from_server > 16383)
    {
 	 DecodeBi channels = new DecodeBi();
 	 String channel_error = channels.decode(command_from_server);
@@ -340,7 +361,12 @@ private int is_verify_sensor = 0 ;
   
   case STATE_CONNECTED:
 	  state_connection_view.setText(R.string.connected);
-	  enable_buttons();
+	  if(is_verify_sensor == 0)
+	   {
+	    enable_verify();  
+	   }
+
+	  disable_cancel();
   break; 
       	  
   case ERROR_CONNECTION:
@@ -358,11 +384,13 @@ private int is_verify_sensor = 0 ;
   case BUSSY_FILE:
 	  state_connection_view.setText(R.string.bussy);
 	  disable_buttons();
+	  disable_cancel();
   break;	
   
   case BUSSY_VERIFICAR:
 	  state_connection_view.setText(R.string.bussy);
-	  disable_buttons(); 
+	  disable_buttons();
+	  disable_cancel();
   break; 
   
   
@@ -379,8 +407,36 @@ cancel.setEnabled(false);
 verify.setEnabled(false);
 }
 
+public void disable_verify()
+{
+verify.setEnabled(false);	
+}
+public void enable_verify()
+{
+verify.setEnabled(true);	
+}
 
-//
+public void disable_capture()
+{
+capture.setEnabled(false);	
+}
+public void enable_capture()
+{
+capture.setEnabled(true);	
+}
+
+public void enable_save()
+{
+save.setEnabled(true);	
+}
+
+public void disable_save()
+{
+save.setEnabled(false);	
+}
+
+
+/*
 public void enable_buttons()
 {
 
@@ -392,11 +448,16 @@ if(is_verify_sensor == 1 )
  save.setEnabled(true);
  cancel.setEnabled(true);	
 }	
-}
+}*/
 
 public void enable_cancel()
 {
 cancel.setEnabled(true);	
+}
+
+public void disable_cancel()
+{
+cancel.setEnabled(false);	
 }
 
 @Override
